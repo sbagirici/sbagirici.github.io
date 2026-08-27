@@ -383,7 +383,7 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 </style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/tr/blog/green-tests-wrong-behavior/' lang='tr'>TR</a></nav></header><main><section class=hero><div class=eyebrow>Work &amp; Research · OT Security</div><p><a href='/tr/blog/green-tests-wrong-behavior/'>Türkçe oku →</a></p></section><article class=article><div class=article-meta><span>Article: OTB-2026-003</span><span>Version 0.1</span><span>7 min read</span><span>Published</span></div><h1>Green Tests, Reversed Behavior</h1>
 <p>A fully passing test suite is comforting. But tests answer only the questions they ask. If code and tests use the same dictionary, constant, or mistaken assumption, the system can be perfectly self-consistent—and wrong about the outside world.</p>
 <p>This is particularly dangerous in protocol engineering. A message may have the right length, pass its integrity check, and be accepted by a parser. Yet the value believed to mean “start” may actually mean “stop.”</p>
-<p><img src="/raw/assets/semantic-oracle.svg" alt="Code and tests sharing an assumption, compared with external validation"></p>
+<p><img src="/raw/assets/semantic-oracle.svg?v=507281e0a1b7" alt="Code and tests sharing an assumption, compared with external validation"></p>
 <h2>Three different correctness claims</h2>
 <p>A protocol test can make at least three distinct claims:</p>
 <ol>
@@ -395,7 +395,7 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 <h2>How a mirrored error appears</h2>
 <p>Imagine an application table saying <code>A = start</code> and <code>B = stop</code>. The test derives its expected output from that same table. If the real protocol defines the reverse, the test still passes because implementation and test share one error.</p>
 <p>The problem grows when the same protocol fact is copied into a client, packet builder, dissector, and detection rule. Four copies become four potential sources of truth. Correcting one does not correct the rest.</p>
-<p><img src="/raw/assets/semantic-drift-pattern.svg" alt="One protocol fact drifting into four separate copies"></p>
+<p><img src="/raw/assets/semantic-drift-pattern.svg?v=f817fa9abacc" alt="One protocol fact drifting into four separate copies"></p>
 <p>We encountered this pattern during authorized protocol engineering work: one component produced a message, another assigned meaning to it, and a test confirmed their shared assumption. The underlying problem was not one coding mistake. It was the <strong>architecture of evidence</strong>*.</p>
 <h2>The external oracle that breaks the loop</h2>
 <p>An oracle is an independent authority for the expected result. For protocol semantics, confidence is stronger when three forms of evidence converge:</p>
