@@ -1,0 +1,478 @@
+<!doctype html><html lang='tr'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>&quot;Ağ Koptuğunda Ne Olur? RSTP, MRP, HSR ve PRP&quot;</title><style>
+:root {
+  color-scheme: light;
+  --paper: #f3eee4;
+  --paper-deep: #e9e1d3;
+  --ink: #20251f;
+  --muted: #686961;
+  --rule: #bdb4a5;
+  --spot: #a4462a;
+  --teal: #176b66;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 17px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  min-height: 100vh;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .16;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+}
+header, main, footer { width: min(1180px, calc(100% - 48px)); margin: auto; }
+.draft-banner {
+  position: relative;
+  z-index: 1;
+  padding: 7px 16px;
+  background: #e9b949;
+  color: #2a2418;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.site-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 30px 0 18px;
+  border-bottom: 1px solid var(--ink);
+}
+.brand {
+  color: var(--ink);
+  font: 700 23px/1 Georgia, "Times New Roman", serif;
+  letter-spacing: -.02em;
+  text-decoration: none;
+}
+.brand span { color: inherit; }
+nav { display: flex; flex-wrap: wrap; gap: 22px; }
+nav a {
+  padding: 0 0 2px;
+  border-bottom: 1px solid transparent;
+  color: var(--ink);
+  font-size: 14px;
+  text-decoration: none;
+}
+nav a:hover { border-color: var(--spot); color: var(--spot); }
+nav .language { color: var(--spot); font-weight: 800; }
+a { color: var(--teal); }
+.eyebrow {
+  color: var(--spot);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+h1, h2, h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+h1 { margin: .15em 0 .35em; font-size: clamp(46px, 7.2vw, 88px); line-height: .98; }
+h2 { margin-top: 1.8em; line-height: 1.08; }
+h3 { line-height: 1.2; }
+.lead {
+  max-width: 720px;
+  color: var(--muted);
+  font: clamp(19px, 2.2vw, 24px)/1.48 Georgia, "Times New Roman", serif;
+}
+.hero { max-width: 980px; padding: 54px 0 24px; }
+.hero-home { padding: clamp(80px, 11vw, 150px) 0 clamp(76px, 10vw, 125px); }
+.hero-home .lead { max-width: 650px; }
+.feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(290px, .7fr);
+  margin: 0 0 100px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.feature-copy { padding: 44px 48px 48px 0; }
+.feature h2 { max-width: 790px; margin: .34em 0 .4em; font-size: clamp(38px, 5vw, 64px); }
+.feature-copy > p { max-width: 680px; font-family: Georgia, "Times New Roman", serif; font-size: 19px; }
+.feature-art {
+  display: flex;
+  align-items: center;
+  min-height: 430px;
+  padding: 38px;
+  border-left: 1px solid var(--ink);
+  background: var(--paper-deep);
+}
+.mini-flow { width: 100%; }
+.mini-node { padding: 16px 0; border-top: 1px solid var(--rule); }
+.mini-node:last-child { border-bottom: 1px solid var(--rule); }
+.mini-node strong { font: 500 23px/1.2 Georgia, "Times New Roman", serif; }
+.mini-arrow { color: var(--spot); font-size: 21px; line-height: 1; text-align: right; }
+.meta { color: var(--muted); font-size: 13px; }
+.article-meta { display: flex; flex-wrap: wrap; gap: 16px; margin: 0 0 28px; }
+.article-meta span {
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.button {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 0 3px;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  color: var(--spot);
+  font-weight: 750;
+  text-decoration: none;
+}
+.about {
+  max-width: 880px;
+  margin: 0 0 90px;
+  padding: 52px 0 62px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.about h2 { margin: .5em 0; font-size: 38px; }
+.about p { max-width: 680px; color: var(--muted); font: 19px/1.55 Georgia, "Times New Roman", serif; }
+.article {
+  max-width: 980px;
+  margin: 0 0 56px;
+  padding: 34px 0 64px;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background: transparent;
+  box-shadow: none;
+}
+.article > h1:first-of-type { max-width: 920px; font-size: clamp(45px, 6.5vw, 78px); }
+.article h2 { margin-top: 2.25em; font-size: clamp(28px, 3.5vw, 40px); }
+.article p, .article li {
+  max-width: 72ch;
+  color: var(--ink);
+  font: 18.5px/1.62 Georgia, "Times New Roman", serif;
+}
+.article li { margin: .4em 0; }
+.article img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 44px 0;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.article blockquote {
+  max-width: 72ch;
+  margin: 30px 0;
+  padding: 12px 24px;
+  border-left: 3px solid var(--spot);
+  background: #ebe4d8;
+}
+.article code { padding: .12em .35em; background: #e4dbcd; border-radius: 2px; font-size: .88em; }
+.article pre { overflow: auto; padding: 18px; background: #e4dbcd; }
+.table-wrap { overflow: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { padding: 10px; border: 1px solid var(--rule); text-align: left; }
+th { background: var(--paper-deep); }
+.downloads { max-width: 980px; margin: 0 0 90px; padding: 40px 0; border: 0; border-bottom: 1px solid var(--ink); background: transparent; }
+.downloads h2 { margin: 0 0 8px; font-size: 38px; }
+.download-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 28px; margin-top: 28px; }
+.download-item { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 18px 0; border: 0; border-top: 1px solid var(--rule); background: transparent; }
+.download-item strong { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 18px; font-weight: 500; }
+.download-item .button { margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 28px; padding-bottom: 70px; }
+.card { padding: 28px 0; border: 0; border-top: 1px solid var(--rule); background: transparent; box-shadow: none; }
+.card h2 { margin: .3em 0; font-size: 25px; }
+.card-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 0 0 22px;
+  border: 1px solid var(--rule);
+  background: #0b2230;
+  object-fit: cover;
+}
+.writing-list > h2 { margin: 0 0 28px; font-size: clamp(32px, 4vw, 48px); }
+.actions { display: flex; gap: 18px; }
+.approval-box {
+  max-width: 980px;
+  margin: -28px 0 64px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--ink);
+}
+.approval-box p { max-width: 72ch; color: var(--muted); }
+.approval-box form { margin-top: 18px; }
+.approval-button {
+  padding: 11px 16px;
+  border: 1px solid var(--spot);
+  border-radius: 2px;
+  background: var(--spot);
+  color: #fff;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+.approval-button:hover { filter: brightness(.92); }
+.approval-recorded { color: var(--teal); font-weight: 750; }
+.viewer { text-align: center; }
+.viewer img { max-width: 100%; height: auto; border: 1px solid var(--rule); background: white; }
+footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--muted); font-size: 12px; }
+@media (max-width: 760px) {
+  header, main, footer { width: min(100% - 28px, 1180px); }
+  .site-header { align-items: flex-start; flex-direction: column; }
+  nav { gap: 16px; }
+  .hero-home { padding: 72px 0; }
+  .feature { grid-template-columns: 1fr; }
+  .feature-copy { padding: 34px 0 38px; }
+  .feature-art { min-height: auto; padding: 30px 0; border-top: 1px solid var(--ink); border-left: 0; background: transparent; }
+  .download-grid { grid-template-columns: 1fr; }
+  .article { padding-top: 16px; }
+}
+
+.site-header .brand {
+  color: var(--spot);
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -.06em;
+}
+.hero-home {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+  align-items: center;
+  gap: clamp(44px, 8vw, 110px);
+  max-width: none;
+  padding: clamp(62px, 8vw, 105px) 0;
+}
+.hero-copy h1 { max-width: 680px; }
+.hero-visual {
+  position: relative;
+  min-height: 330px;
+  overflow: hidden;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--teal);
+  color: var(--paper);
+}
+.hero-visual::before {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  top: -72px;
+  right: -58px;
+  border: 1px solid rgba(243, 238, 228, .55);
+  border-radius: 50%;
+  box-shadow: 0 0 0 42px rgba(243, 238, 228, .08), 0 0 0 84px rgba(243, 238, 228, .05);
+}
+.hero-monogram {
+  position: absolute;
+  left: 26px;
+  top: 22px;
+  color: transparent;
+  font: 500 clamp(100px, 12vw, 168px)/1 Georgia, "Times New Roman", serif;
+  -webkit-text-stroke: 1px rgba(243, 238, 228, .9);
+}
+.hero-index {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  left: 26px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(243, 238, 228, .55);
+}
+.hero-index span {
+  padding: 13px 8px 0 0;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.feature { grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr); margin-bottom: 72px; }
+.feature-art {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  padding: 28px;
+  background: #0b2230;
+}
+.feature-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  object-fit: contain;
+}
+.feature-art figcaption {
+  margin-top: 14px;
+  color: #d7e4ea;
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.about { margin-bottom: 58px; padding: 40px 0 48px; }
+@media (max-width: 760px) {
+  .hero-home { grid-template-columns: 1fr; gap: 42px; padding: 58px 0 64px; }
+  .hero-visual { min-height: 250px; }
+  .hero-index { grid-template-columns: 1fr; }
+  .hero-index span { padding-top: 7px; }
+  .feature { grid-template-columns: 1fr; }
+  .feature-art { padding: 18px 14px 22px; background: #0b2230; }
+  .feature-art img { min-height: 0; }
+  .feature-art figcaption { padding: 0 16px; }
+}
+.about {
+  display: grid;
+  grid-template-columns: minmax(230px, .58fr) minmax(0, 1.42fr);
+  gap: clamp(34px, 7vw, 92px);
+  align-items: center;
+  max-width: none;
+}
+.about-portrait {
+  display: block;
+  width: 100%;
+  max-width: 390px;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--rule);
+  object-fit: cover;
+  object-position: center 28%;
+  filter: contrast(1.02);
+}
+.about-copy { max-width: 720px; }
+.about-copy h2 { font-size: clamp(36px, 5vw, 58px); }
+.about-copy p { max-width: 680px; }
+.about-page-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+  gap: clamp(42px, 8vw, 108px);
+  align-items: end;
+  padding: clamp(58px, 8vw, 105px) 0 72px;
+  border-bottom: 1px solid var(--ink);
+}
+.about-page-hero h1 { max-width: 720px; }
+.about-page-hero .lead { max-width: 700px; }
+.about-page-hero .about-portrait { justify-self: end; }
+.about-sections { max-width: 900px; margin: 0 auto; padding: 30px 0 92px; }
+.about-section { padding: 34px 0 42px; border-bottom: 1px solid var(--rule); }
+.about-section h2 { margin: 0 0 22px; font-size: clamp(30px, 4vw, 43px); }
+.about-section p { max-width: 72ch; font: 18.5px/1.68 Georgia, "Times New Roman", serif; }
+.curiosity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 24px; }
+.curiosity-card { min-height: 170px; padding: 20px 0 24px; border-top: 1px solid var(--ink); }
+.curiosity-card .curiosity-index { color: var(--spot); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.curiosity-card h3 { margin: 22px 0 10px; font-size: 23px; }
+.curiosity-card p { margin: 0; color: var(--muted); font: 15px/1.55 ui-sans-serif, system-ui, sans-serif; }
+.about-quote { margin: 30px 0 0; padding: 26px 0 4px 28px; border-left: 3px solid var(--spot); color: var(--spot); font: clamp(25px, 3.5vw, 37px)/1.22 Georgia, "Times New Roman", serif; }
+.editorial-note { max-width: 72ch; margin-top: 30px; padding: 20px 24px; border: 1px solid var(--rule); background: var(--paper-deep); }
+.editorial-note p { margin: 0; color: var(--muted); font: 14px/1.58 ui-sans-serif, system-ui, sans-serif; }
+.about-disclaimer { margin-top: 48px; padding: 26px 0; border-top: 1px solid var(--ink); }
+.about-disclaimer p { color: var(--muted); font-size: 13px; }
+@media (max-width: 760px) {
+  .about, .about-page-hero { grid-template-columns: 1fr; }
+  .about-portrait { max-width: 100%; }
+  .about-page-hero .about-portrait { grid-row: 1; justify-self: stretch; max-height: 520px; }
+  .curiosity-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) { .curiosity-grid { grid-template-columns: 1fr; } }
+</style><body><header class=site-header><a class=brand href='/tr/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/tr/'>Ana sayfa</a><a href='/tr/#writing'>Yazılar</a><a href='/tr/hakkimda/'>Hakkımda</a><a class=language href='/' lang='en'>EN</a></nav></header><main><section class=hero><div class=eyebrow>Çalışmalar · OT Güvenliği</div></section><article class=article><div class=article-meta><span>Makale: OTB-2026-005</span><span>Sürüm 0.2</span><span>10 dk okuma</span><span>Yayınlandı</span></div><h1>Ağ Koptuğunda Ne Olur? RSTP, MRP, HSR ve PRP</h1>
+<p>Bir Ethernet kablosu koptu. Şimdi ne olacak?</p>
+<p>Ofis ağında cevap çoğu zaman “kısa bir kesinti olur, ağ yeni yolu bulur” olabilir. Fakat aynı ağ, bir trafo merkezinde koruma veya kontrol bilgisini taşıyorsa birkaç paketlik kayıp bile ayrıca değerlendirilmelidir. Tam bu noktada dört kısaltma karşımıza çıkar: RSTP, MRP, HSR ve PRP.</p>
+<p>İsimleri birbirine benzese de aynı problemi aynı biçimde çözmezler. RSTP ve MRP, arızayı gördükten sonra iletişim yolunu yeniden düzenler. HSR ve PRP ise yedek kopyayı arıza oluşmadan önce yola çıkarmaya dayanır.</p>
+<p>Bu yazının ana konusu trafo merkezi değil, <strong>kesintisiz haberleşme tasarımıdır</strong>*. Trafo merkezi ise farkın neden önemli olduğunu fiziksel sonuçlarıyla gösterebileceğimiz iyi bir örnektir.</p>
+<h2>Önce şu ayrımı cebimize koyalım</h2>
+<p>Dört mekanizmayı tek cümleyle hatırlamak mümkün:</p>
+<ul>
+<li><strong>RSTP:</strong>* Döngüsüz bir aktif yol kurar; arızada port rollerini değiştirerek ağı yeniden yakınsatır.</li>
+<li><strong>MRP:</strong>* Endüstriyel Ethernet halkasını yönetir; arızada halkayı alternatif yol üzerinden yeniden düzenler.</li>
+<li><strong>HSR:</strong>* Aynı çerçeveyi yaygın halka modelinde iki yöne birden gönderir.</li>
+<li><strong>PRP:</strong>* Aynı çerçeveyi iki ayrı Ethernet ağına birden gönderir.</li>
+</ul>
+<p>İlk iki yöntemde anahtar kelime <strong>toparlanma</strong>*dır. Son ikisinde ise ikinci kopya zaten yoldadır.</p>
+<p><img src="/raw/assets/hsr-prp-mrp-topology.svg" alt="RSTP, MRP, HSR ve PRP&#x27;nin arıza anındaki davranışını karşılaştıran şema"></p>
+<h2>RSTP: yolu açık tutmak için bazı yolları bekletmek</h2>
+<p>Ethernet switch’lerini gelişigüzel halkalarla birbirine bağlarsak çerçeveler ağ içinde dönüp çoğalabilir. Rapid Spanning Tree Protocol, köprülenmiş ağda döngüsüz bir aktif topoloji kurar. Bunu yaparken bazı portlar trafiği iletir, alternatif olabilecek bazı portlar ise bekler.</p>
+<p>Bunu bir binadaki koridorlar gibi düşünebiliriz. Her kapıyı aynı anda açık bırakırsak insanlar daire çizerek dolaşabilir. RSTP hangi kapıların kullanılacağını belirler. Aktif koridorlardan biri kapanırsa bekleyen yolun rolü değişir ve ağ yeniden düzenlenir.</p>
+<p>Buradaki önemli nokta şudur: RSTP hızlı yeniden yapılandırma için tasarlanmıştır, fakat yine de <strong>arıza sonrası yeniden yapılandırma</strong>* yaklaşımıdır. Gerçek kesinti süresi topolojiye, bağlantı arızasının nasıl algılandığına, port ve köprü rollerine, yapılandırmaya ve eski STP cihazlarıyla birlikte çalışma durumuna bağlıdır. Bu nedenle yalnız “RSTP var” diyerek belirli bir süre garanti edemeyiz.</p>
+<p>RSTP genel amaçlı köprülenmiş ağlar içindir. Halka ile sınırlı değildir; farklı fiziksel topolojilerde döngüsüz bir aktif yapı oluşturabilir.</p>
+<h2>MRP: endüstriyel halka için kontrollü toparlanma</h2>
+<p>Media Redundancy Protocol, IEC 62439-2’de tanımlanan halka tabanlı bir toparlanma protokolüdür. Halka, bir media redundancy manager tarafından gözetilir. Tek bir bağlantı veya switch arızası algılandığında iletişim diğer yönden devam edecek biçimde halka yeniden düzenlenir.</p>
+<p>RSTP ile MRP bu açıdan aynı ailede düşünülebilir: İkisi de arızadan sonra topolojide değişiklik yapar. Fakat MRP, endüstriyel Ethernet halkası ve tek arızaya deterministik tepki hedefi için daha özel bir model sunar. RSTP ise daha genel bir köprüleme çözümüdür.</p>
+<p>Bu ayrım “hangisi daha iyi?” sorusundan daha yararlıdır. Tasarımınız bir halka mı, daha genel bir örgülü ağ mı? Hedeflenen toparlanma süresi nedir? Kullanılacak switch’ler aynı MRP profilini gerçekten destekliyor mu? Cevap protokolün isminden değil bu koşullardan çıkar.</p>
+<h2>HSR: iki yönü de en baştan kullanmak</h2>
+<p>High-availability Seamless Redundancy, IEC 62439-3 kapsamındadır. Yaygın halka modelinde bir HSR düğümü aynı çerçeveyi iki portundan, halkanın iki yönüne yollar. Hedefe önce ulaşan geçerli kopya üst katmana teslim edilir; sonra gelen eş kopya elenir.</p>
+<p>Bir bağlantı koptuğunda “şimdi hangi yolu açalım?” diye beklenmez. İkinci kopya zaten diğer yönden ilerlemektedir. IEC 62439-3 bu davranışı sıfır toparlanma süreli kesintisiz geçiş olarak tanımlar.</p>
+<p>Ama burada küçük ve önemli bir tuzak var: <strong>Sıfır toparlanma süresi, sıfır uçtan uca gecikme demek değildir.</strong>* Çerçeve hâlâ cihazlardan geçer, kuyruklanabilir ve uygulama tarafından işlenir. Söylenen şey, tek ağ elemanı arızasında yeni bir yolun kurulmasını beklememesidir.</p>
+<p>HSR halkası yalnız switch’lerden oluşmaz. HSR destekleyen röle, RTU veya başka bir IED transit düğüm olabilir. Buna karşılık halkanın içindeki transit düğümlerin gerekli HSR işlevlerini uygulaması gerekir. Standart ayrıca iki portlu düğümlerin halkası dışında çok portlu düğümlerle örgülü ağları da kapsar; burada anlaşılması en kolay olan halka modelini kullanıyoruz.</p>
+<h2>PRP: aynı mesajı iki ayrı ağa emanet etmek</h2>
+<p>Parallel Redundancy Protocol de IEC 62439-3 kapsamındadır. PRP düğümü aynı bilgiyi LAN A ve LAN B olarak ele alınan iki ayrı Ethernet ağına eş zamanlı yollar. Alıcı önce gelen geçerli kopyayı kullanır, diğerini yinelenen trafik olarak eler.</p>
+<p>HSR ile PRP’nin temel fikri aynıdır: İkinci kopya, arıza olmadan önce gönderilir. Fakat bu kopyaların izlediği dünya farklıdır. HSR’de iki kopya aynı halka yapısının iki yönünde ilerler. PRP’de ise iki ayrı LAN kullanılır.</p>
+<p>Bu yüzden PRP yalnız bir protokol seçimi değil, altyapı kararıdır. İki ağ; daha fazla switch, kablo, port, enerji beslemesi ve bakım disiplini anlamına gelebilir. Karşılığında iki yolun hata alanlarını daha güçlü biçimde ayırma imkânı verir. Bu avantajın gerçekleşmesi, iki LAN’ın ortak bileşenler ve ortak nedenli arızalar açısından gerçekten nasıl kurulduğuna bağlıdır.</p>
+<h2>Dördünü yan yana koyalım</h2>
+<div class=table-wrap><table><thead><tr><th>Mekanizma</th><th>Tipik topoloji</th><th>Arıza karşısındaki davranış</th><th>En kolay zihinsel model</th></tr></thead><tbody>
+<tr><td>RSTP</td><td>Köprülenmiş halka veya örgü</td><td>Port rollerini değiştirir, aktif topolojiyi yeniden yakınsatır</td><td>Bekleyen yolu arızadan sonra açar</td></tr>
+<tr><td>MRP</td><td>Yönetilen endüstriyel Ethernet halkası</td><td>Arızayı algılar, halkayı alternatif yol için yeniden düzenler</td><td>Halkayı arızadan sonra toparlar</td></tr>
+<tr><td>HSR</td><td>Yaygın modelde iki portlu düğümlerden halka</td><td>Çerçeveyi iki yönde önceden taşır, ikinci kopyayı eler</td><td>Aynı halkanın iki yönünü birlikte kullanır</td></tr>
+<tr><td>PRP</td><td>İki ayrı Ethernet LAN’ı</td><td>Çerçeveyi iki LAN’da önceden taşır, ikinci kopyayı eler</td><td>Aynı mesajı iki ayrı ağa verir</td></tr>
+</tbody></table></div>
+<p>Bu tablo ürün garantisi değildir. Desteklenen standart revizyonu, firmware, port rolleri, kapasite ve birlikte çalışabilirlik üretici belgeleriyle doğrulanmalıdır.</p>
+<h2>Trafo merkezi örneğinde neden fark ediyor?</h2>
+<p>Şimdi bu genel ayrımı trafo merkezine taşıyalım.</p>
+<p>Bir koruma rölesi akım ve gerilim gibi büyüklükleri değerlendirir ve belirlenen koşullar oluştuğunda kesicinin açılmasına karar verebilir. Bu zincirin her zaman Ethernet’e bağlı olduğunu düşünmemeliyiz. Ölçüm ve açma devreleri tamamen kablolu olabilir. Başka bir tasarımda ölçümler Sampled Values, durum veya açma bilgileri GOOSE üzerinden taşınabilir.</p>
+<p>IEC 61850 bağlamında basit bir zihinsel model şöyledir:</p>
+<ul>
+<li><strong>GOOSE</strong>*, açma, kilitleme veya durum değişikliği gibi olay ve durum bilgisini taşıyabilir.</li>
+<li><strong>Sampled Values</strong>*, akım ve gerilim gibi örneklenmiş proses değerlerinin Ethernet üzerinden iletilmesine yönelik eşlemeyi tanımlar.</li>
+<li><strong>MMS tabanlı iletişim</strong>*, gözetim, raporlama ve kontrol gibi farklı zaman beklentileri olan işlevleri taşıyabilir.</li>
+</ul>
+<p>Buradan “trafo merkezindeki bütün Ethernet paketleri kesintisiz taşınmalı” sonucu çıkmaz. Önce hangi mesajın hangi fiziksel veya operasyonel işlevde kullanıldığına bakmak gerekir. Bir mühendislik erişiminin kısa süreli kesilmesi ile koruma kararında kullanılan iletişimin kesilmesi aynı risk değildir.</p>
+<p>Asıl tasarım sorusu şudur: <strong>Bu işlev, ağın toparlanmasını bekleyebilir mi?</strong>* Cevap evetse RSTP veya MRP gibi toparlanma tabanlı bir yöntem yeterli olabilir. Cevap hayırsa HSR veya PRP gibi ikinci kopyayı önceden taşıyan bir yaklaşım değerlendirilir.</p>
+<h2>SAN, DAN ve RedBox konusu nereden çıktı?</h2>
+<p>HSR ve PRP konuşulmaya başladığında birkaç yeni kısaltma daha gelir:</p>
+<ul>
+<li><strong>DANH</strong>*, HSR işlevini uygulayan çift bağlantılı düğümdür.</li>
+<li><strong>DANP</strong>*, PRP’nin iki LAN’ına katılan çift bağlantılı düğümdür.</li>
+<li><strong>SAN</strong>*, yedeklilik protokolünü doğal olarak uygulamayan tek bağlantılı düğümdür.</li>
+<li><strong>RedBox</strong>*, SAN ile HSR veya PRP alanı arasında gerekli yedeklilik uyarlamasını yapar.</li>
+<li><strong>VDAN</strong>*, RedBox arkasındaki SAN’ın yedekli ağ açısından sanal bir çift bağlantılı düğüm gibi temsil edilmesini anlatır.</li>
+</ul>
+<p>Bir SAN, PRP ağlarından yalnız birine yedeksiz biçimde bağlanabilir. Aynı cihazın iki PRP LAN’ına yedekli katılması isteniyorsa RedBox gerekir. HSR halkasında ise HSR işlevi olmayan bir SAN doğrudan transit halka düğümü yapılamaz.</p>
+<h2>“Seamless” demek arızayı unutmak demek değildir</h2>
+<p>HSR ve PRP tek yol arızasını uygulamadan gizleyebilir. Bu güzel haberin bir de operasyon tarafı vardır: Uygulama çalışmaya devam ettiği için ilk yolun kaybı fark edilmezse sistem artık yedeksiz çalışıyor olabilir.</p>
+<p>Bu nedenle uygulama erişilebilirliği ile yedeklilik sağlığını ayrı izlemek gerekir. Tasarım ve kabul testinde şu sorular işe yarar:</p>
+<ol>
+<li>Hangi işlev bu ağa bağlı ve ne kadar kesintiyi tolere edebilir?</li>
+<li>Tek yol arızası ne kadar sürede ve nerede görünür hâle geliyor?</li>
+<li>Bakım sırasında bir yol kapalıyken oluşan ikinci hata sınandı mı?</li>
+<li>Ortak enerji, kablo güzergâhı veya cihaz iki yolu birden etkileyebilir mi?</li>
+<li>Çoğaltılan trafik ve multicast yükü kapasite hesabına katıldı mı?</li>
+<li>İzleme sensörü iki PRP LAN’ını veya HSR halkanın gerekli kesimlerini gerçekten görüyor mu?</li>
+</ol>
+<p>Paket yakalama tarafında da dikkat gerekir. Aynı çerçevenin iki kopyasını görmek otomatik olarak döngü veya saldırı kanıtı değildir. Tersine, sensör yalnız bir LAN’ı görüyorsa ikinci yolun sağlığı hakkında hüküm veremez. Yakalama konumu ve yinelenen trafik eleme davranışı analiz sonucuyla birlikte kaydedilmelidir.</p>
+<h2>Yedeklilik, siber güvenlik sağlamaz</h2>
+<p>RSTP ve MRP topolojiyi yönetir; HSR ve PRP çerçeveleri çoğaltır. Bu mekanizmalar tek başına gönderenin kimliğini doğrulamaz, mesaj bütünlüğünü sağlamaz veya içeriği şifrelemez.</p>
+<p>IEC 61850 tabanlı haberleşmenin güvenliği ayrıca ele alınmalıdır. IEC 62351-6, IEC 61850’den türeyen protokollerin güvenli çalışmasına yönelik mesaj, prosedür ve algoritmaları tanımlar. Kullanılan ürünün hangi güvenlik profilini ve çalışma modunu gerçekten desteklediği ayrıca doğrulanmalıdır.</p>
+<h2>Sonuç</h2>
+<p>Konu aslında dört kısaltmayı ezberlemekten daha basit:</p>
+<blockquote>RSTP ve MRP arızadan sonra ağı toparlar. HSR ve PRP ise yedek kopyayı arızadan önce yola çıkarır.</blockquote>
+<p>Trafo merkezi haberleşmesi bu farkı görünür kılan güçlü bir örnektir; fakat karar yöntemi daha geneldir. Önce taşınan bilginin işlevini ve kabul edilebilir kesintiyi belirleriz. Sonra topoloji, cihaz desteği, hata alanları, izleme ve maliyet üzerinden doğru yedeklilik yaklaşımını seçeriz.</p>
+<h2>Kanıt sınırı</h2>
+<p>RSTP, MRP, HSR, PRP ve IEC 61850 eşlemelerine ilişkin temel tanımlar resmî IEEE/IEC yayın kayıtları ve üretici uygulama kılavuzuyla <strong>doğrulandı</strong>*. Yakalama konumu ile yinelenen trafik elemenin görünürlüğe etkisine ilişkin operasyon önerileri bu tanımlardan yapılan <strong>çıkarımdır</strong>*.</p>
+<p>Belirli bir saha, ürün veya firmware üzerinde toparlanma süresi ve koruma etkisi ölçülmedi; bunlar <strong>açık</strong>* doğrulama alanlarıdır. Yazı bu nedenle bir ürün uygunluk beyanı veya hazır tasarım reçetesi değildir.</p>
+<h2>Kaynaklar</h2>
+<ul>
+<li><a href="https://standards.ieee.org/ieee/802.1Q/10323/" target="_blank" rel="noopener noreferrer">IEEE 802.1Q-2022 — Bridges and Bridged Networks</a></li>
+<li><a href="https://www.ieee802.org/1/pages/802.1w.html" target="_blank" rel="noopener noreferrer">IEEE 802.1 Working Group — Rapid Reconfiguration of Spanning Tree</a></li>
+<li><a href="https://webstore.iec.ch/en/publication/62849" target="_blank" rel="noopener noreferrer">IEC 62439-2:2021 — Media Redundancy Protocol (MRP)</a></li>
+<li><a href="https://webstore.iec.ch/en/publication/64423" target="_blank" rel="noopener noreferrer">IEC 62439-3:2021 — Parallel Redundancy Protocol (PRP) and High-availability Seamless Redundancy (HSR)</a></li>
+<li><a href="https://webstore.iec.ch/en/publication/75090" target="_blank" rel="noopener noreferrer">IEC 61850-5:2013+AMD1:2022 — Communication requirements for functions and device models</a></li>
+<li><a href="https://webstore.iec.ch/en/publication/6021" target="_blank" rel="noopener noreferrer">IEC 61850-8-1:2011 — Mappings to MMS and ISO/IEC 8802-3</a></li>
+<li><a href="https://webstore.iec.ch/en/publication/6023" target="_blank" rel="noopener noreferrer">IEC 61850-9-2:2011 — Sampled values over ISO/IEC 8802-3</a></li>
+<li><a href="https://webstore.iec.ch/en/publication/63742" target="_blank" rel="noopener noreferrer">IEC 62351-6:2020 — Security for IEC 61850</a></li>
+<li><a href="https://support.industry.siemens.com/cs/attachments/109805301/7SR5_Communication_Protocol_Manual_V2.50.pdf" target="_blank" rel="noopener noreferrer">Siemens — Reyrolle 7SR5 Communication Protocol Manual, Edition 08/2024</a></li>
+</ul></article></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1540" viewBox="0 0 1600 1540" role="img" aria-labelledby="title desc">
+  <title id="title">RSTP, MRP, HSR ve PRP çalışma modelleri</title>
+  <desc id="desc">RSTP ve MRP'nin arıza sonrasında topolojiyi yeniden düzenlediğini; HSR'nin aynı çerçeveyi halkanın iki yönüne, PRP'nin ise iki ayrı LAN'a önceden gönderdiğini karşılaştırır.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071827"/><stop offset="1" stop-color="#14394a"/></linearGradient>
+    <marker id="cyan-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#38bdf8"/></marker>
+    <marker id="mint-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#2dd4bf"/></marker>
+    <marker id="amber-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#fbbf24"/></marker>
+    <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-opacity=".24"/></filter>
+  </defs>
+
+  <rect width="1600" height="1540" fill="url(#background)"/>
+  <circle cx="1490" cy="70" r="270" fill="#2dd4bf" opacity=".05"/>
+  <text x="70" y="80" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="44" font-weight="700">Ağ koptuğunda ne olur?</text>
+  <text x="70" y="126" fill="#b8cbd5" font-family="Inter,Arial,sans-serif" font-size="23">İki yöntem ağı toparlar; iki yöntem yedek kopyayı önceden taşır.</text>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <g transform="translate(70 180)">
+      <rect width="700" height="530" rx="26" fill="#102c3d" stroke="#a78bfa" stroke-width="2"/>
+      <text x="32" y="52" fill="#c4b5fd" font-size="17" font-weight="700">ARIZA SONRASI TOPARLANMA</text>
+      <text x="32" y="96" fill="#f8fafc" font-size="34" font-weight="700">RSTP</text>
+      <text x="32" y="130" fill="#b8cbd5" font-size="19">Köprülenmiş halka veya örgü</text>
+      <g transform="translate(190 165)">
+        <g fill="none" stroke="#6d8796" stroke-width="7"><path d="M70 20 260 0 390 105 320 235 110 235 0 115Z"/><path d="M70 20 320 235M260 0 110 235M0 115 390 105"/></g>
+        <g fill="none" stroke="#a78bfa" stroke-width="9"><path d="M70 20 260 0 390 105"/><path d="M70 20 0 115 110 235 320 235"/></g>
+        <path d="M260 0 110 235" fill="none" stroke="#fbbf24" stroke-width="7" stroke-dasharray="13 12"/>
+        <g fill="#f8fafc" stroke="#a78bfa" stroke-width="5"><circle cx="70" cy="20" r="19"/><circle cx="260" cy="0" r="19"/><circle cx="390" cy="105" r="19"/><circle cx="320" cy="235" r="19"/><circle cx="110" cy="235" r="19"/><circle cx="0" cy="115" r="19"/></g>
+      </g>
+      <text x="32" y="447" fill="#f8fafc" font-size="22" font-weight="700">Önce döngüsüz aktif yol kurar</text>
+      <text x="32" y="480" fill="#d7e4ea" font-size="19">Arızada port rolleri değişir ve ağ yeniden yakınsar.</text>
+    </g>
+
+    <g transform="translate(830 180)">
+      <rect width="700" height="530" rx="26" fill="#102c3d" stroke="#38bdf8" stroke-width="2"/>
+      <text x="32" y="52" fill="#7dd3fc" font-size="17" font-weight="700">ARIZA SONRASI TOPARLANMA</text>
+      <text x="32" y="96" fill="#f8fafc" font-size="34" font-weight="700">MRP</text>
+      <text x="32" y="130" fill="#b8cbd5" font-size="19">Yönetilen endüstriyel Ethernet halkası</text>
+      <g transform="translate(195 165)">
+        <path d="M75 10H265L385 120 310 240H85L0 120Z" fill="none" stroke="#617d8d" stroke-width="8"/>
+        <path d="M75 10 0 120 85 240H310" fill="none" stroke="#38bdf8" stroke-width="10" marker-end="url(#cyan-arrow)"/>
+        <path d="M75 10H265L385 120" fill="none" stroke="#8ca5b2" stroke-width="5" stroke-dasharray="12 12"/>
+        <path d="M370 102 400 138M400 102 370 138" stroke="#fb7185" stroke-width="10" stroke-linecap="round"/>
+        <g fill="#f8fafc" stroke="#38bdf8" stroke-width="5"><circle cx="75" cy="10" r="19"/><circle cx="265" cy="10" r="19"/><circle cx="385" cy="120" r="19"/><circle cx="310" cy="240" r="19"/><circle cx="85" cy="240" r="19"/><circle cx="0" cy="120" r="19"/></g>
+      </g>
+      <text x="32" y="447" fill="#f8fafc" font-size="22" font-weight="700">Halkayı gözetir</text>
+      <text x="32" y="480" fill="#d7e4ea" font-size="19">Arızada alternatif yol için halkayı yeniden düzenler.</text>
+    </g>
+
+    <g transform="translate(70 760)">
+      <rect width="700" height="530" rx="26" fill="#102c3d" stroke="#2dd4bf" stroke-width="2"/>
+      <text x="32" y="52" fill="#5eead4" font-size="17" font-weight="700">YEDEK KOPYA ÖNCEDEN YOLDA</text>
+      <text x="32" y="96" fill="#f8fafc" font-size="34" font-weight="700">HSR</text>
+      <text x="32" y="130" fill="#b8cbd5" font-size="19">Yaygın modelde iki portlu düğümlerden halka</text>
+      <g transform="translate(195 165)">
+        <path d="M75 10H265L385 120 310 240H85L0 120Z" fill="none" stroke="#617d8d" stroke-width="7"/>
+        <path d="M75 10H265L385 120" fill="none" stroke="#2dd4bf" stroke-width="9" marker-end="url(#mint-arrow)"/>
+        <path d="M75 10 0 120 85 240" fill="none" stroke="#fbbf24" stroke-width="9" marker-end="url(#amber-arrow)"/>
+        <g fill="#f8fafc" stroke="#2dd4bf" stroke-width="5"><circle cx="75" cy="10" r="19"/><circle cx="265" cy="10" r="19"/><circle cx="385" cy="120" r="19"/><circle cx="310" cy="240" r="19"/><circle cx="85" cy="240" r="19"/><circle cx="0" cy="120" r="19"/></g>
+        <text x="145" y="67" fill="#5eead4" font-size="17" font-weight="700">KOPYA A</text>
+        <text x="8" y="67" fill="#fcd34d" font-size="17" font-weight="700">KOPYA B</text>
+      </g>
+      <text x="32" y="447" fill="#f8fafc" font-size="22" font-weight="700">Halkanın iki yönünü baştan kullanır</text>
+      <text x="32" y="480" fill="#d7e4ea" font-size="19">İlk geçerli kopyayı teslim eder, diğerini eler.</text>
+    </g>
+
+    <g transform="translate(830 760)">
+      <rect width="700" height="530" rx="26" fill="#102c3d" stroke="#fbbf24" stroke-width="2"/>
+      <text x="32" y="52" fill="#fcd34d" font-size="17" font-weight="700">YEDEK KOPYA ÖNCEDEN YOLDA</text>
+      <text x="32" y="96" fill="#f8fafc" font-size="34" font-weight="700">PRP</text>
+      <text x="32" y="130" fill="#b8cbd5" font-size="19">İki ayrı Ethernet LAN'ı</text>
+      <g transform="translate(150 165)">
+        <rect x="0" y="60" width="170" height="125" rx="20" fill="#143f4e" stroke="#2dd4bf" stroke-width="4"/>
+        <rect x="230" y="60" width="170" height="125" rx="20" fill="#44391d" stroke="#fbbf24" stroke-width="4"/>
+        <text x="85" y="114" text-anchor="middle" fill="#5eead4" font-size="22" font-weight="700">LAN A</text>
+        <text x="315" y="114" text-anchor="middle" fill="#fcd34d" font-size="22" font-weight="700">LAN B</text>
+        <text x="85" y="147" text-anchor="middle" fill="#d7e4ea" font-size="16">Ayrı ağ</text>
+        <text x="315" y="147" text-anchor="middle" fill="#d7e4ea" font-size="16">Ayrı ağ</text>
+        <circle cx="200" cy="0" r="26" fill="#f8fafc" stroke="#b8cbd5" stroke-width="5"/>
+        <circle cx="200" cy="240" r="26" fill="#f8fafc" stroke="#b8cbd5" stroke-width="5"/>
+        <path d="M185 22 110 58" stroke="#2dd4bf" stroke-width="7" marker-end="url(#mint-arrow)"/>
+        <path d="M215 22 290 58" stroke="#fbbf24" stroke-width="7" marker-end="url(#amber-arrow)"/>
+        <path d="M110 185 185 224" stroke="#2dd4bf" stroke-width="7" marker-end="url(#mint-arrow)"/>
+        <path d="M290 185 215 224" stroke="#fbbf24" stroke-width="7" marker-end="url(#amber-arrow)"/>
+      </g>
+      <text x="32" y="447" fill="#f8fafc" font-size="22" font-weight="700">İki LAN'ı baştan kullanır</text>
+      <text x="32" y="480" fill="#d7e4ea" font-size="19">İlk geçerli kopyayı teslim eder, diğerini eler.</text>
+    </g>
+  </g>
+
+  <rect x="70" y="1340" width="1460" height="115" rx="20" fill="#f8fafc"/>
+  <text x="105" y="1382" fill="#17384a" font-family="Inter,Arial,sans-serif" font-size="21" font-weight="700">Asıl tasarım sorusu</text>
+  <text x="105" y="1420" fill="#314d5e" font-family="Inter,Arial,sans-serif" font-size="20">Uygulama ağın toparlanmasını bekleyebilir mi, yoksa yedek kopya arızadan önce yolda mı olmalı?</text>
+  <text x="1528" y="1500" text-anchor="end" fill="#8ca5b2" font-family="Inter,Arial,sans-serif" font-size="15">Kavramsal karşılaştırma · ürün garantisi değildir</text>
+</svg>
