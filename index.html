@@ -328,4 +328,46 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
   .feature-art img { min-height: 0; }
   .feature-art figcaption { padding: 0 16px; }
 }
-</style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a class=language href='/tr/' lang='tr'>TR</a></nav></header><main><section class='hero hero-home'><div class=hero-copy><div class=eyebrow>Personal site</div><h1>Selman Bağırıcı</h1><p class=lead>A personal space for my work, ideas, and things I find worth keeping.</p></div><div class=hero-visual aria-hidden=true><div class=hero-monogram>SB</div><div class=hero-index><span>01 · Work</span><span>02 · Notes</span><span>03 · Personal</span></div></div></section><section class=about><div class=eyebrow>In brief</div><h2>About me</h2><p>I work on industrial systems, network protocols, and OT security. I use this space to examine practical technical questions together with their sources, context, and limits.</p></section><section class=writing-list id=writing><h2>Writing</h2><p class=lead>The first articles will appear here after publication approval.</p></section></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>
+.about {
+  display: grid;
+  grid-template-columns: minmax(230px, .58fr) minmax(0, 1.42fr);
+  gap: clamp(34px, 7vw, 92px);
+  align-items: center;
+  max-width: none;
+}
+.about-portrait {
+  display: block;
+  width: 100%;
+  max-width: 390px;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--rule);
+  object-fit: cover;
+  object-position: center 28%;
+  filter: contrast(1.02);
+}
+.about-copy { max-width: 720px; }
+.about-copy h2 { font-size: clamp(36px, 5vw, 58px); }
+.about-copy p { max-width: 680px; }
+.about-page-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+  gap: clamp(42px, 8vw, 108px);
+  align-items: end;
+  padding: clamp(58px, 8vw, 105px) 0 72px;
+  border-bottom: 1px solid var(--ink);
+}
+.about-page-hero h1 { max-width: 720px; }
+.about-page-hero .lead { max-width: 700px; }
+.about-page-hero .about-portrait { justify-self: end; }
+.about-sections { max-width: 900px; margin: 0 auto; padding: 30px 0 92px; }
+.about-section { padding: 34px 0 42px; border-bottom: 1px solid var(--rule); }
+.about-section h2 { margin: 0 0 22px; font-size: clamp(30px, 4vw, 43px); }
+.about-section p { max-width: 72ch; font: 18.5px/1.68 Georgia, "Times New Roman", serif; }
+.about-disclaimer { margin-top: 48px; padding: 26px 0; border-top: 1px solid var(--ink); }
+.about-disclaimer p { color: var(--muted); font-size: 13px; }
+@media (max-width: 760px) {
+  .about, .about-page-hero { grid-template-columns: 1fr; }
+  .about-portrait { max-width: 100%; }
+  .about-page-hero .about-portrait { grid-row: 1; justify-self: stretch; max-height: 520px; }
+}
+</style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/tr/' lang='tr'>TR</a></nav></header><main><section class='hero hero-home'><div class=hero-copy><div class=eyebrow>Personal site</div><h1>Selman Bağırıcı</h1><p class=lead>A personal space for my work, ideas, and things I find worth keeping.</p></div><div class=hero-visual aria-hidden=true><div class=hero-monogram>SB</div><div class=hero-index><span>01 · Work</span><span>02 · Notes</span><span>03 · Personal</span></div></div></section><section class=about><img class=about-portrait src='/raw/assets/selman-bagirici.jpg' alt='Black-and-white portrait of Selman Bağırıcı'><div class=about-copy><div class=eyebrow>In brief</div><h2>About me</h2><p>Hi, I’m Selman. I’m an Electrical and Electronics Engineer who has worked in cybersecurity for many years, with a current focus on industrial systems, OT, and critical infrastructure security.</p><p>My engineering background shaped the way I look beyond how a technology is used to ask why it was designed that way and what problem it actually solves. This site is my personal digital notebook for professional work as well as the things I learn, explore, and want to remember.</p><a class=button href='/about/'>More about me →</a></div></section><section class=writing-list id=writing><h2>Writing</h2><p class=lead>The first articles will appear here after publication approval.</p></section></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>
