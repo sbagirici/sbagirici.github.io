@@ -1,4 +1,4 @@
-<!doctype html><html lang='en'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>Selman Bağırıcı · Personal Site</title><style>
+<!doctype html><html lang='tr'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><link rel=canonical href='https://selmanbagirici.com/green-tests-wrong-behavior/'><title>&quot;Testler Yeşil, Davranış Ters: Bir Sistem Nasıl Kendi İçinde Tutarlı ve Yanlış Olabilir?&quot;</title><style>
 :root {
   color-scheme: light;
   --paper: #f3eee4;
@@ -380,4 +380,43 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
   .curiosity-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 480px) { .curiosity-grid { grid-template-columns: 1fr; } }
-</style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/tr/' lang='tr'>TR</a></nav></header><main><section class='hero hero-home'><div class=hero-copy><div class=eyebrow>Personal site</div><h1>Selman Bağırıcı</h1><p class=lead>A personal space for my work, ideas, and things I find worth keeping.</p></div><div class=hero-visual aria-hidden=true><div class=hero-monogram>SB</div><div class=hero-index><span>01 · Work</span><span>02 · Notes</span><span>03 · Personal</span></div></div></section><section class=about><img class=about-portrait src='/raw/assets/selman-bagirici.jpg?v=74379ac018e8' alt='Black-and-white portrait of Selman Bağırıcı'><div class=about-copy><div class=eyebrow>In brief</div><h2>About me</h2><p>Hi, I’m Selman. I’m an Electrical and Electronics Engineer, and I’ve worked in cybersecurity for many years. I continued my academic path with a master’s degree in Cybersecurity. These days, industrial systems, OT, and critical infrastructure security make up an important part of my professional interests.</p><p>I think my engineering background has shaped the way I look at things. Learning how a technology is used certainly matters, but what usually interests me is the next step: Why does it work this way? Why was it designed this way? What problem does it actually solve?</p><a class=button href='/about/'>More about me →</a></div></section><section class=feature id=writing><div class=feature-copy><div class=eyebrow>Work &amp; Research · OT Security</div><h2>&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;</h2><p>&quot;When code and tests share the same bad assumption, they can validate each other. Semantic correctness needs independent evidence.&quot;</p><div class=article-meta><span>27 August 2026</span><span>7 min read</span></div><a class=button href='/en/green-tests-wrong-behavior/'>Read the article →</a></div><figure class=feature-art><img src='/raw/assets/semantic-oracle.svg?v=507281e0a1b7' alt='&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;'><figcaption>From the article</figcaption></figure></section><section class=writing-list><h2>Writing</h2><div class=grid><article class=card><img class=card-art src='/raw/assets/semantic-oracle.svg?v=507281e0a1b7' alt='&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;'><div class=meta>OTB-2026-003 · v0.1</div><h2>&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;</h2><p>&quot;When code and tests share the same bad assumption, they can validate each other. Semantic correctness needs independent evidence.&quot;</p><a class=button href='/en/green-tests-wrong-behavior/'>Read the article →</a></article></div></section></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>
+</style><body><header class=site-header><a class=brand href='/tr/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/tr/'>Ana sayfa</a><a href='/tr/#writing'>Yazılar</a><a href='/tr/hakkimda/'>Hakkımda</a><a class=language href='/en/green-tests-wrong-behavior/' lang='en'>EN</a></nav></header><main><section class=hero><div class=eyebrow>Çalışmalar · OT Güvenliği</div><p><a href='/en/green-tests-wrong-behavior/'>Read in English →</a></p></section><article class=article><div class=article-meta><span>Makale: OTB-2026-003</span><span>Sürüm 0.1</span><span>7 dk okuma</span><span>Yayınlandı</span></div><h1>Testler Yeşil, Davranış Ters</h1>
+<p>Bir test paketinin tamamının geçmesi rahatlatıcıdır. Fakat testler yalnızca sordukları soruların cevabıdır. Kod ve test aynı sözlüğü, aynı sabiti veya aynı yanlış varsayımı kullanıyorsa sistem kendi içinde kusursuz biçimde tutarlı—ve dış dünyaya göre yanlış—olabilir.</p>
+<p>Bu, özellikle protokol mühendisliğinde tehlikelidir. Bir mesaj doğru uzunlukta olabilir, bütünlük kontrolünden geçebilir ve ayrıştırıcı tarafından kabul edilebilir. Yine de “başlat” sandığınız değer gerçekte “durdur” anlamına gelebilir.</p>
+<p><img src="/raw/assets/semantic-oracle.svg?v=507281e0a1b7" alt="Kod ile testin aynı varsayımı paylaşması ve harici doğrulama"></p>
+<h2>Üç ayrı doğruluk iddiası</h2>
+<p>Bir protokol testinin neyi kanıtladığını ayırmak gerekir:</p>
+<ol>
+<li><strong>Sözdizimsel doğruluk:</strong>* Mesaj beklenen yapıya ve uzunluğa sahip mi?</li>
+<li><strong>Semantik doğruluk:</strong>* Alanlar standartta tanımlanan anlamı gerçekten taşıyor mu?</li>
+<li><strong>Operasyonel etki:</strong>* Hedef sistem mesajı beklenen biçimde yorumlayıp beklenen sonucu üretti mi?</li>
+</ol>
+<p>Birinci katmandaki başarı, ikinci ve üçüncü katmanları otomatik olarak kanıtlamaz. Sağlam bir bütünlük değeri, yanlış anlamı yalnızca hatasız biçimde taşımış olabilir.</p>
+<h2>Aynalı hata nasıl oluşur?</h2>
+<p>Basit bir örnek düşünelim. Uygulamada <code>A = başlat</code>, <code>B = durdur</code> şeklinde bir tablo var. Test de beklenen sonucu aynı tablodan üretiyor. Gerçek protokol tanımı bunun tersiyse test geçer; çünkü uygulama ile test aynı hatayı paylaşır.</p>
+<p>Bu sorun tek dosyayla sınırlı kalmaz. Aynı protokol gerçeği istemciye, paket oluşturucuya, ayrıştırıcıya ve tespit kuralına ayrı ayrı kopyalandığında dört farklı doğruluk kaynağı oluşur. Birini düzeltmek diğerlerini düzeltmez.</p>
+<p><img src="/raw/assets/semantic-drift-pattern.svg?v=f817fa9abacc" alt="Aynı protokol gerçeğinin dört kopyaya ayrışması"></p>
+<p>Yetkili protokol geliştirme çalışmalarında karşılaştığımız örüntü tam olarak buydu: bir bileşen mesajı üretirken başka bir bileşen ona anlam veriyor, test ise ikisinin ortak varsayımını onaylıyordu. Sorun tek bir programlama hatası değil, <strong>kanıt mimarisi</strong>* sorunuydu.</p>
+<h2>İç döngüyü kıran harici oracle</h2>
+<p>“Oracle”, beklenen sonucun ne olması gerektiğini söyleyen bağımsız otoritedir. Protokol semantiğinde tek bir kaynağa güvenmek yerine üç kanıtı kesiştirmek daha güçlüdür:</p>
+<ul>
+<li>Standardın normatif tanımı veya üreticinin yetkili belgesi,</li>
+<li>Bilinen bir yakalama dosyasındaki gerçek baytların bağımsız çözümlenmesi,</li>
+<li>Yetkili laboratuvarda hedef sistemin gözlenen sonucu.</li>
+</ul>
+<p>Bu üçü aynı şeyi söylüyorsa güven artar. Ayrışırlarsa başarısız testten daha değerli bir sonuç elde ederiz: hangi varsayımın araştırılması gerektiğini biliriz.</p>
+<h2>Daha güçlü testler için beş uygulama</h2>
+<p><strong>Bekleneni uygulamadan türetmeyin.</strong>* Test vektörleri, üretim kodunun sabitlerini aynen yeniden kullanmamalı.</p>
+<p><strong>Alan anlamını açık yazın.</strong>* “Değer 2 olmalı” yerine “değer 2, standarttaki X davranışını temsil etmeli” deyin ve kaynağı işaretleyin.</p>
+<p><strong>Golden capture kullanın.</strong>* Beklenen paket, uygulamadan bağımsız elde edilmiş ve kaynağı bilinen bir yakalamayla karşılaştırılmalı.</p>
+<p><strong>Karşı örnek ekleyin.</strong>* Yalnız doğru değerin kabulünü değil, ters anlamın reddini veya farklı etki oluşturmasını da sınayın.</p>
+<p><strong>Gerçeği tek yerde yönetin.</strong>* İstemci, builder, dissector ve tespit içeriği ortak bir şemadan üretilebiliyorsa semantik drift alanı küçülür. Yine de o şemanın kendisi bağımsız kanıtla doğrulanmalıdır.</p>
+<h2>Yeşil rengin doğru yorumu</h2>
+<p>“Tüm testler geçti” bir sonuç değil, eksik bir cümledir. Devamı şöyle olmalıdır: <strong>hangi davranış, hangi bağımsız kaynağa karşı, hangi ortamda doğrulandı?</strong>*</p>
+<p>Yeşil test değerlidir. Ancak yalnızca gerçekten ölçtüğü şey için kanıttır.</p>
+<h2>Kaynaklar</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2312.06875" target="_blank" rel="noopener noreferrer">Eywa: Automating Model Based Testing Using Large Language Models</a></li>
+<li><a href="https://arxiv.org/abs/2504.18050" target="_blank" rel="noopener noreferrer">Traceable Specification Validation for Network Protocols</a></li>
+<li><a href="https://doi.org/10.1109/MRL.2024.3389629" target="_blank" rel="noopener noreferrer">NIST — Combinatorial Coverage Measures for Testing</a></li>
+</ul></article></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>

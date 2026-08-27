@@ -1,4 +1,4 @@
-<!doctype html><html lang='en'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>Selman Bağırıcı · Personal Site</title><style>
+<!doctype html><html lang='en'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><link rel=canonical href='https://selmanbagirici.com/en/green-tests-wrong-behavior/'><title>&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;</title><style>
 :root {
   color-scheme: light;
   --paper: #f3eee4;
@@ -380,4 +380,43 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
   .curiosity-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 480px) { .curiosity-grid { grid-template-columns: 1fr; } }
-</style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/tr/' lang='tr'>TR</a></nav></header><main><section class='hero hero-home'><div class=hero-copy><div class=eyebrow>Personal site</div><h1>Selman Bağırıcı</h1><p class=lead>A personal space for my work, ideas, and things I find worth keeping.</p></div><div class=hero-visual aria-hidden=true><div class=hero-monogram>SB</div><div class=hero-index><span>01 · Work</span><span>02 · Notes</span><span>03 · Personal</span></div></div></section><section class=about><img class=about-portrait src='/raw/assets/selman-bagirici.jpg?v=74379ac018e8' alt='Black-and-white portrait of Selman Bağırıcı'><div class=about-copy><div class=eyebrow>In brief</div><h2>About me</h2><p>Hi, I’m Selman. I’m an Electrical and Electronics Engineer, and I’ve worked in cybersecurity for many years. I continued my academic path with a master’s degree in Cybersecurity. These days, industrial systems, OT, and critical infrastructure security make up an important part of my professional interests.</p><p>I think my engineering background has shaped the way I look at things. Learning how a technology is used certainly matters, but what usually interests me is the next step: Why does it work this way? Why was it designed this way? What problem does it actually solve?</p><a class=button href='/about/'>More about me →</a></div></section><section class=feature id=writing><div class=feature-copy><div class=eyebrow>Work &amp; Research · OT Security</div><h2>&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;</h2><p>&quot;When code and tests share the same bad assumption, they can validate each other. Semantic correctness needs independent evidence.&quot;</p><div class=article-meta><span>27 August 2026</span><span>7 min read</span></div><a class=button href='/en/green-tests-wrong-behavior/'>Read the article →</a></div><figure class=feature-art><img src='/raw/assets/semantic-oracle.svg?v=507281e0a1b7' alt='&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;'><figcaption>From the article</figcaption></figure></section><section class=writing-list><h2>Writing</h2><div class=grid><article class=card><img class=card-art src='/raw/assets/semantic-oracle.svg?v=507281e0a1b7' alt='&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;'><div class=meta>OTB-2026-003 · v0.1</div><h2>&quot;Green Tests, Reversed Behavior: How a System Can Be Consistent and Wrong&quot;</h2><p>&quot;When code and tests share the same bad assumption, they can validate each other. Semantic correctness needs independent evidence.&quot;</p><a class=button href='/en/green-tests-wrong-behavior/'>Read the article →</a></article></div></section></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>
+</style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/green-tests-wrong-behavior/' lang='tr'>TR</a></nav></header><main><section class=hero><div class=eyebrow>Work &amp; Research · OT Security</div><p><a href='/green-tests-wrong-behavior/'>Türkçe oku →</a></p></section><article class=article><div class=article-meta><span>Article: OTB-2026-003</span><span>Version 0.1</span><span>7 min read</span><span>Published</span></div><h1>Green Tests, Reversed Behavior</h1>
+<p>A fully passing test suite is comforting. But tests answer only the questions they ask. If code and tests use the same dictionary, constant, or mistaken assumption, the system can be perfectly self-consistent—and wrong about the outside world.</p>
+<p>This is particularly dangerous in protocol engineering. A message may have the right length, pass its integrity check, and be accepted by a parser. Yet the value believed to mean “start” may actually mean “stop.”</p>
+<p><img src="/raw/assets/semantic-oracle.svg?v=507281e0a1b7" alt="Code and tests sharing an assumption, compared with external validation"></p>
+<h2>Three different correctness claims</h2>
+<p>A protocol test can make at least three distinct claims:</p>
+<ol>
+<li><strong>Syntactic correctness:</strong>* does the message have the expected shape and length?</li>
+<li><strong>Semantic correctness:</strong>* do its fields carry the meaning defined by the protocol?</li>
+<li><strong>Operational effect:</strong>* did the target interpret the message and produce the expected outcome?</li>
+</ol>
+<p>Success at the first layer does not automatically establish the second or third. A valid integrity value may merely transport the wrong meaning without corruption.</p>
+<h2>How a mirrored error appears</h2>
+<p>Imagine an application table saying <code>A = start</code> and <code>B = stop</code>. The test derives its expected output from that same table. If the real protocol defines the reverse, the test still passes because implementation and test share one error.</p>
+<p>The problem grows when the same protocol fact is copied into a client, packet builder, dissector, and detection rule. Four copies become four potential sources of truth. Correcting one does not correct the rest.</p>
+<p><img src="/raw/assets/semantic-drift-pattern.svg?v=f817fa9abacc" alt="One protocol fact drifting into four separate copies"></p>
+<p>We encountered this pattern during authorized protocol engineering work: one component produced a message, another assigned meaning to it, and a test confirmed their shared assumption. The underlying problem was not one coding mistake. It was the <strong>architecture of evidence</strong>*.</p>
+<h2>The external oracle that breaks the loop</h2>
+<p>An oracle is an independent authority for the expected result. For protocol semantics, confidence is stronger when three forms of evidence converge:</p>
+<ul>
+<li>The normative standard or authoritative vendor documentation,</li>
+<li>Independent dissection of real bytes from a capture with known provenance,</li>
+<li>The observed result on a target in an authorized laboratory.</li>
+</ul>
+<p>Agreement raises confidence. Disagreement is more useful than a generic failed test: it identifies the assumption that needs investigation.</p>
+<h2>Five practices for stronger tests</h2>
+<p><strong>Do not derive expectations from the implementation.</strong>* Test vectors should not simply reuse production constants.</p>
+<p><strong>State field meaning explicitly.</strong>* Replace “the value should be 2” with “value 2 represents behavior X in the cited specification.”</p>
+<p><strong>Use golden captures.</strong>* Compare output with an independently obtained, provenance-recorded capture.</p>
+<p><strong>Add counterexamples.</strong>* Test not only acceptance of the intended value, but rejection—or a distinct effect—for its semantic opposite.</p>
+<p><strong>Manage protocol truth once.</strong>* Generating client, builder, dissector, and detection representations from one schema reduces the drift surface. The schema itself must still be checked against independent evidence.</p>
+<h2>Reading green correctly</h2>
+<p>“All tests pass” is not a conclusion; it is an unfinished sentence. Complete it: <strong>which behavior was validated, against which independent authority, in which environment?</strong>*</p>
+<p>A green test is valuable. It is evidence only for what it actually measures.</p>
+<h2>Sources</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2312.06875" target="_blank" rel="noopener noreferrer">Eywa: Automating Model Based Testing Using Large Language Models</a></li>
+<li><a href="https://arxiv.org/abs/2504.18050" target="_blank" rel="noopener noreferrer">Traceable Specification Validation for Network Protocols</a></li>
+<li><a href="https://doi.org/10.1109/MRL.2024.3389629" target="_blank" rel="noopener noreferrer">NIST — Combinatorial Coverage Measures for Testing</a></li>
+</ul></article></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>
