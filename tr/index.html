@@ -363,11 +363,21 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 .about-section { padding: 34px 0 42px; border-bottom: 1px solid var(--rule); }
 .about-section h2 { margin: 0 0 22px; font-size: clamp(30px, 4vw, 43px); }
 .about-section p { max-width: 72ch; font: 18.5px/1.68 Georgia, "Times New Roman", serif; }
+.curiosity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 24px; }
+.curiosity-card { min-height: 170px; padding: 20px 0 24px; border-top: 1px solid var(--ink); }
+.curiosity-card .curiosity-index { color: var(--spot); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.curiosity-card h3 { margin: 22px 0 10px; font-size: 23px; }
+.curiosity-card p { margin: 0; color: var(--muted); font: 15px/1.55 ui-sans-serif, system-ui, sans-serif; }
+.about-quote { margin: 30px 0 0; padding: 26px 0 4px 28px; border-left: 3px solid var(--spot); color: var(--spot); font: clamp(25px, 3.5vw, 37px)/1.22 Georgia, "Times New Roman", serif; }
+.editorial-note { max-width: 72ch; margin-top: 30px; padding: 20px 24px; border: 1px solid var(--rule); background: var(--paper-deep); }
+.editorial-note p { margin: 0; color: var(--muted); font: 14px/1.58 ui-sans-serif, system-ui, sans-serif; }
 .about-disclaimer { margin-top: 48px; padding: 26px 0; border-top: 1px solid var(--ink); }
 .about-disclaimer p { color: var(--muted); font-size: 13px; }
 @media (max-width: 760px) {
   .about, .about-page-hero { grid-template-columns: 1fr; }
   .about-portrait { max-width: 100%; }
   .about-page-hero .about-portrait { grid-row: 1; justify-self: stretch; max-height: 520px; }
+  .curiosity-grid { grid-template-columns: 1fr 1fr; }
 }
+@media (max-width: 480px) { .curiosity-grid { grid-template-columns: 1fr; } }
 </style><body><header class=site-header><a class=brand href='/tr/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/tr/'>Ana sayfa</a><a href='/tr/#writing'>Yazılar</a><a href='/tr/hakkimda/'>Hakkımda</a><a class=language href='/' lang='en'>EN</a></nav></header><main><section class='hero hero-home'><div class=hero-copy><div class=eyebrow>Kişisel site</div><h1>Selman Bağırıcı</h1><p class=lead>Çalışmalarımı, fikirlerimi ve kayda değer bulduğum şeyleri bir araya getirdiğim kişisel alan.</p></div><div class=hero-visual aria-hidden=true><div class=hero-monogram>SB</div><div class=hero-index><span>01 · Çalışmalar</span><span>02 · Notlar</span><span>03 · Kişisel</span></div></div></section><section class=about><img class=about-portrait src='/raw/assets/selman-bagirici.jpg' alt='Selman Bağırıcı&#x27;nın siyah-beyaz portresi'><div class=about-copy><div class=eyebrow>Kısaca</div><h2>Hakkımda</h2><p>Merhaba, ben Selman. Elektrik-Elektronik Mühendisiyim; uzun yıllardır siber güvenlik alanında çalışıyor, bugünlerde ağırlıklı olarak endüstriyel sistemler, OT ve kritik altyapı güvenliğiyle ilgileniyorum.</p><p>Mühendislik geçmişim, bir teknolojinin yalnızca nasıl kullanıldığına değil; neden öyle tasarlandığına ve gerçekte hangi problemi çözdüğüne bakma biçimimi şekillendirdi. Bu site, profesyonel çalışmalarımın yanında merak ettiğim, öğrendiğim ve hatırlamak istediğim şeyleri bir araya getirdiğim kişisel dijital not defterim.</p><a class=button href='/tr/hakkimda/'>Hakkımda daha fazlası →</a></div></section><section class=writing-list id=writing><h2>Yazılar</h2><p class=lead>İlk yazılar yayın onayından sonra burada yer alacak.</p></section></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>
