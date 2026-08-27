@@ -1,4 +1,4 @@
-<!doctype html><html lang='tr'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><link rel=canonical href='https://selmanbagirici.com/ring-topolojiler/'><title>&quot;Ağ Koptuğunda Ne Olur? RSTP, MRP, HSR ve PRP&quot;</title><style>
+<!doctype html><html lang='en'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><link rel=canonical href='https://selmanbagirici.com/en/ring-topologies/'><title>&quot;What Happens When the Network Breaks? RSTP, MRP, HSR, and PRP&quot;</title><style>
 :root {
   color-scheme: light;
   --paper: #f3eee4;
@@ -380,91 +380,91 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
   .curiosity-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 480px) { .curiosity-grid { grid-template-columns: 1fr; } }
-</style><body><header class=site-header><a class=brand href='/tr/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/tr/'>Ana sayfa</a><a href='/tr/#writing'>Yazılar</a><a href='/tr/hakkimda/'>Hakkımda</a><a class=language href='/en/ring-topologies/' lang='en'>EN</a></nav></header><main><section class=hero><div class=eyebrow>Çalışmalar · OT Güvenliği</div><p><a href='/en/ring-topologies/'>Read in English →</a></p></section><article class=article><div class=article-meta><span>Makale: OTB-2026-005</span><span>Sürüm 0.3</span><span>10 dk okuma</span><span>Yayınlandı</span></div><h1>Ağ Koptuğunda Ne Olur? RSTP, MRP, HSR ve PRP</h1>
-<p>Bir Ethernet kablosu koptu. Şimdi ne olacak?</p>
-<p>Ofis ağında cevap çoğu zaman “kısa bir kesinti olur, ağ yeni yolu bulur” olabilir. Fakat aynı ağ, bir trafo merkezinde koruma veya kontrol bilgisini taşıyorsa birkaç paketlik kayıp bile ayrıca değerlendirilmelidir. Tam bu noktada dört kısaltma karşımıza çıkar: RSTP, MRP, HSR ve PRP.</p>
-<p>İsimleri birbirine benzese de aynı problemi aynı biçimde çözmezler. RSTP ve MRP, arızayı gördükten sonra iletişim yolunu yeniden düzenler. HSR ve PRP ise yedek kopyayı arıza oluşmadan önce yola çıkarmaya dayanır.</p>
-<p>Bu yazının ana konusu trafo merkezi değil, <strong>kesintisiz haberleşme tasarımıdır</strong>*. Trafo merkezi ise farkın neden önemli olduğunu fiziksel sonuçlarıyla gösterebileceğimiz iyi bir örnektir.</p>
-<h2>Önce şu ayrımı cebimize koyalım</h2>
-<p>Dört mekanizmayı tek cümleyle hatırlamak mümkün:</p>
+</style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/ring-topolojiler/' lang='tr'>TR</a></nav></header><main><section class=hero><div class=eyebrow>Work &amp; Research · OT Security</div><p><a href='/ring-topolojiler/'>Türkçe oku →</a></p></section><article class=article><div class=article-meta><span>Article: OTB-2026-005</span><span>Version 0.3</span><span>10 min read</span><span>Published</span></div><h1>What Happens When the Network Breaks? RSTP, MRP, HSR, and PRP</h1>
+<p>An Ethernet cable has been cut. What happens now?</p>
+<p>In an office network, the answer may often be, “there will be a brief interruption, and the network will find a new path.” But if the same network carries protection or control information in a substation, even the loss of a few packets may need separate consideration. This is where four abbreviations enter the picture: RSTP, MRP, HSR, and PRP.</p>
+<p>Their names may look similar, but they do not solve the problem in the same way. RSTP and MRP rearrange the communication path after detecting a failure. HSR and PRP rely on sending a backup copy before the failure occurs.</p>
+<p>The main subject of this article is not the substation itself. It is <strong>continuous-communication design</strong>*. A substation is simply a useful example because it lets us see the physical significance of the difference.</p>
+<h2>Keep this distinction in mind</h2>
+<p>The four mechanisms can be remembered in one short list:</p>
 <ul>
-<li><strong>RSTP:</strong>* Döngüsüz bir aktif yol kurar; arızada port rollerini değiştirerek ağı yeniden yakınsatır.</li>
-<li><strong>MRP:</strong>* Endüstriyel Ethernet halkasını yönetir; arızada halkayı alternatif yol üzerinden yeniden düzenler.</li>
-<li><strong>HSR:</strong>* Aynı çerçeveyi yaygın halka modelinde iki yöne birden gönderir.</li>
-<li><strong>PRP:</strong>* Aynı çerçeveyi iki ayrı Ethernet ağına birden gönderir.</li>
+<li><strong>RSTP:</strong>* Builds a loop-free active path and reconverges the network by changing port roles after a failure.</li>
+<li><strong>MRP:</strong>* Manages an industrial Ethernet ring and rearranges the ring over the alternative path after a failure.</li>
+<li><strong>HSR:</strong>* In the common ring model, sends the same frame in both directions.</li>
+<li><strong>PRP:</strong>* Sends the same frame over two separate Ethernet networks.</li>
 </ul>
-<p>İlk iki yöntemde anahtar kelime <strong>toparlanma</strong>*dır. Son ikisinde ise ikinci kopya zaten yoldadır.</p>
-<p><img src="/raw/assets/hsr-prp-mrp-topology.svg?v=093b9c55acd2" alt="RSTP, MRP, HSR ve PRP&#x27;nin arıza anındaki davranışını karşılaştıran şema"></p>
-<h2>RSTP: yolu açık tutmak için bazı yolları bekletmek</h2>
-<p>Ethernet switch’lerini gelişigüzel halkalarla birbirine bağlarsak çerçeveler ağ içinde dönüp çoğalabilir. Rapid Spanning Tree Protocol, köprülenmiş ağda döngüsüz bir aktif topoloji kurar. Bunu yaparken bazı portlar trafiği iletir, alternatif olabilecek bazı portlar ise bekler.</p>
-<p>Bunu bir binadaki koridorlar gibi düşünebiliriz. Her kapıyı aynı anda açık bırakırsak insanlar daire çizerek dolaşabilir. RSTP hangi kapıların kullanılacağını belirler. Aktif koridorlardan biri kapanırsa bekleyen yolun rolü değişir ve ağ yeniden düzenlenir.</p>
-<p>Buradaki önemli nokta şudur: RSTP hızlı yeniden yapılandırma için tasarlanmıştır, fakat yine de <strong>arıza sonrası yeniden yapılandırma</strong>* yaklaşımıdır. Gerçek kesinti süresi topolojiye, bağlantı arızasının nasıl algılandığına, port ve köprü rollerine, yapılandırmaya ve eski STP cihazlarıyla birlikte çalışma durumuna bağlıdır. Bu nedenle yalnız “RSTP var” diyerek belirli bir süre garanti edemeyiz.</p>
-<p>RSTP genel amaçlı köprülenmiş ağlar içindir. Halka ile sınırlı değildir; farklı fiziksel topolojilerde döngüsüz bir aktif yapı oluşturabilir.</p>
-<h2>MRP: endüstriyel halka için kontrollü toparlanma</h2>
-<p>Media Redundancy Protocol, IEC 62439-2’de tanımlanan halka tabanlı bir toparlanma protokolüdür. Halka, bir media redundancy manager tarafından gözetilir. Tek bir bağlantı veya switch arızası algılandığında iletişim diğer yönden devam edecek biçimde halka yeniden düzenlenir.</p>
-<p>RSTP ile MRP bu açıdan aynı ailede düşünülebilir: İkisi de arızadan sonra topolojide değişiklik yapar. Fakat MRP, endüstriyel Ethernet halkası ve tek arızaya deterministik tepki hedefi için daha özel bir model sunar. RSTP ise daha genel bir köprüleme çözümüdür.</p>
-<p>Bu ayrım “hangisi daha iyi?” sorusundan daha yararlıdır. Tasarımınız bir halka mı, daha genel bir örgülü ağ mı? Hedeflenen toparlanma süresi nedir? Kullanılacak switch’ler aynı MRP profilini gerçekten destekliyor mu? Cevap protokolün isminden değil bu koşullardan çıkar.</p>
-<h2>HSR: iki yönü de en baştan kullanmak</h2>
-<p>High-availability Seamless Redundancy, IEC 62439-3 kapsamındadır. Yaygın halka modelinde bir HSR düğümü aynı çerçeveyi iki portundan, halkanın iki yönüne yollar. Hedefe önce ulaşan geçerli kopya üst katmana teslim edilir; sonra gelen eş kopya elenir.</p>
-<p>Bir bağlantı koptuğunda “şimdi hangi yolu açalım?” diye beklenmez. İkinci kopya zaten diğer yönden ilerlemektedir. IEC 62439-3 bu davranışı sıfır toparlanma süreli kesintisiz geçiş olarak tanımlar.</p>
-<p>Ama burada küçük ve önemli bir tuzak var: <strong>Sıfır toparlanma süresi, sıfır uçtan uca gecikme demek değildir.</strong>* Çerçeve hâlâ cihazlardan geçer, kuyruklanabilir ve uygulama tarafından işlenir. Söylenen şey, tek ağ elemanı arızasında yeni bir yolun kurulmasını beklememesidir.</p>
-<p>HSR halkası yalnız switch’lerden oluşmaz. HSR destekleyen röle, RTU veya başka bir IED transit düğüm olabilir. Buna karşılık halkanın içindeki transit düğümlerin gerekli HSR işlevlerini uygulaması gerekir. Standart ayrıca iki portlu düğümlerin halkası dışında çok portlu düğümlerle örgülü ağları da kapsar; burada anlaşılması en kolay olan halka modelini kullanıyoruz.</p>
-<h2>PRP: aynı mesajı iki ayrı ağa emanet etmek</h2>
-<p>Parallel Redundancy Protocol de IEC 62439-3 kapsamındadır. PRP düğümü aynı bilgiyi LAN A ve LAN B olarak ele alınan iki ayrı Ethernet ağına eş zamanlı yollar. Alıcı önce gelen geçerli kopyayı kullanır, diğerini yinelenen trafik olarak eler.</p>
-<p>HSR ile PRP’nin temel fikri aynıdır: İkinci kopya, arıza olmadan önce gönderilir. Fakat bu kopyaların izlediği dünya farklıdır. HSR’de iki kopya aynı halka yapısının iki yönünde ilerler. PRP’de ise iki ayrı LAN kullanılır.</p>
-<p>Bu yüzden PRP yalnız bir protokol seçimi değil, altyapı kararıdır. İki ağ; daha fazla switch, kablo, port, enerji beslemesi ve bakım disiplini anlamına gelebilir. Karşılığında iki yolun hata alanlarını daha güçlü biçimde ayırma imkânı verir. Bu avantajın gerçekleşmesi, iki LAN’ın ortak bileşenler ve ortak nedenli arızalar açısından gerçekten nasıl kurulduğuna bağlıdır.</p>
-<h2>Dördünü yan yana koyalım</h2>
-<div class=table-wrap><table><thead><tr><th>Mekanizma</th><th>Tipik topoloji</th><th>Arıza karşısındaki davranış</th><th>En kolay zihinsel model</th></tr></thead><tbody>
-<tr><td>RSTP</td><td>Köprülenmiş halka veya örgü</td><td>Port rollerini değiştirir, aktif topolojiyi yeniden yakınsatır</td><td>Bekleyen yolu arızadan sonra açar</td></tr>
-<tr><td>MRP</td><td>Yönetilen endüstriyel Ethernet halkası</td><td>Arızayı algılar, halkayı alternatif yol için yeniden düzenler</td><td>Halkayı arızadan sonra toparlar</td></tr>
-<tr><td>HSR</td><td>Yaygın modelde iki portlu düğümlerden halka</td><td>Çerçeveyi iki yönde önceden taşır, ikinci kopyayı eler</td><td>Aynı halkanın iki yönünü birlikte kullanır</td></tr>
-<tr><td>PRP</td><td>İki ayrı Ethernet LAN’ı</td><td>Çerçeveyi iki LAN’da önceden taşır, ikinci kopyayı eler</td><td>Aynı mesajı iki ayrı ağa verir</td></tr>
+<p>For the first two, the key word is <strong>recovery</strong>*. For the other two, the second copy is already in transit.</p>
+<p><img src="/raw/assets/hsr-prp-mrp-topology-en.svg?v=0137857e77e7" alt="Diagram comparing how RSTP, MRP, HSR, and PRP behave when a failure occurs"></p>
+<h2>RSTP: holding some paths in reserve to keep the network usable</h2>
+<p>If Ethernet switches are connected in arbitrary loops, frames can circulate and multiply inside the network. Rapid Spanning Tree Protocol creates a loop-free active topology in a bridged network. Some ports forward traffic, while others that could provide an alternative path remain in a non-forwarding role.</p>
+<p>Think of the corridors in a building. If every door is left open at the same time, people may walk around in circles. RSTP decides which doors are used. If an active corridor closes, the role of a waiting path changes and the network is rearranged.</p>
+<p>The important point is that RSTP is designed for rapid reconfiguration, but it is still a <strong>post-failure reconfiguration</strong>* approach. The actual interruption depends on the topology, how the link failure is detected, port and bridge roles, configuration, and interoperability with legacy STP devices. The mere presence of RSTP therefore does not guarantee a particular recovery time.</p>
+<p>RSTP is intended for general-purpose bridged networks. It is not limited to rings; it can create a loop-free active structure across different physical topologies.</p>
+<h2>MRP: controlled recovery for an industrial ring</h2>
+<p>Media Redundancy Protocol is a ring-based recovery protocol defined in IEC 62439-2. The ring is supervised by a media redundancy manager. When a single link or switch failure is detected, the ring is rearranged so that communication can continue in the other direction.</p>
+<p>RSTP and MRP can be placed in the same broad family in this respect: both change the topology after a failure. MRP, however, offers a more specialized model for an industrial Ethernet ring and a deterministic response target for a single failure. RSTP is a more general bridging solution.</p>
+<p>That distinction is more useful than asking which one is simply “better.” Is the design a ring or a more general mesh? What recovery time is required? Do the selected switches genuinely support the same MRP profile? The answer comes from these conditions, not from the protocol name alone.</p>
+<h2>HSR: using both directions from the start</h2>
+<p>High-availability Seamless Redundancy is covered by IEC 62439-3. In the common ring model, an HSR node sends the same frame from both ports and in both directions around the ring. The first valid copy to reach the destination is delivered to the upper layer; the matching copy that arrives later is discarded.</p>
+<p>When a link breaks, the network does not wait to decide which path to open. The second copy is already travelling in the other direction. IEC 62439-3 describes this behavior as seamless switchover with zero recovery time.</p>
+<p>There is a small but important trap here: <strong>zero recovery time does not mean zero end-to-end latency.</strong>* The frame still passes through devices, may be queued, and must be processed by the application. The claim is that a new path does not have to be established after a single network-element failure.</p>
+<p>An HSR ring is not made only of switches. An HSR-capable relay, RTU, or another IED may act as a transit node. Transit nodes inside the ring must, however, implement the required HSR functions. The standard also covers meshes built with multiport nodes in addition to rings of two-port nodes; this article uses the ring because it is the easiest model to visualize.</p>
+<h2>PRP: entrusting the same message to two separate networks</h2>
+<p>Parallel Redundancy Protocol is also covered by IEC 62439-3. A PRP node sends the same information simultaneously over two separate Ethernet networks, referred to as LAN A and LAN B. The receiver uses the first valid copy and discards the other as duplicate traffic.</p>
+<p>HSR and PRP share the same central idea: the second copy is sent before a failure. The environments followed by those copies are different. With HSR, the copies travel in opposite directions through the same ring structure. With PRP, they travel through two separate LANs.</p>
+<p>PRP is therefore not only a protocol choice; it is also an infrastructure decision. Two networks may mean more switches, cables, ports, power supplies, and maintenance discipline. In return, they make it possible to separate the failure domains of the two paths more strongly. Whether that advantage is realized depends on how the LANs are actually separated with respect to shared components and common-cause failures.</p>
+<h2>Putting all four side by side</h2>
+<div class=table-wrap><table><thead><tr><th>Mechanism</th><th>Typical topology</th><th>Behavior during a failure</th><th>Simplest mental model</th></tr></thead><tbody>
+<tr><td>RSTP</td><td>Bridged ring or mesh</td><td>Changes port roles and reconverges the active topology</td><td>Opens a waiting path after the failure</td></tr>
+<tr><td>MRP</td><td>Managed industrial Ethernet ring</td><td>Detects the failure and rearranges the ring for the alternative path</td><td>Recovers the ring after the failure</td></tr>
+<tr><td>HSR</td><td>Commonly, a ring of two-port nodes</td><td>Sends the frame in both directions in advance and discards the duplicate</td><td>Uses both directions of the same ring at once</td></tr>
+<tr><td>PRP</td><td>Two separate Ethernet LANs</td><td>Sends the frame over both LANs in advance and discards the duplicate</td><td>Gives the same message to two separate networks</td></tr>
 </tbody></table></div>
-<p>Bu tablo ürün garantisi değildir. Desteklenen standart revizyonu, firmware, port rolleri, kapasite ve birlikte çalışabilirlik üretici belgeleriyle doğrulanmalıdır.</p>
-<h2>Trafo merkezi örneğinde neden fark ediyor?</h2>
-<p>Şimdi bu genel ayrımı trafo merkezine taşıyalım.</p>
-<p>Bir koruma rölesi akım ve gerilim gibi büyüklükleri değerlendirir ve belirlenen koşullar oluştuğunda kesicinin açılmasına karar verebilir. Bu zincirin her zaman Ethernet’e bağlı olduğunu düşünmemeliyiz. Ölçüm ve açma devreleri tamamen kablolu olabilir. Başka bir tasarımda ölçümler Sampled Values, durum veya açma bilgileri GOOSE üzerinden taşınabilir.</p>
-<p>IEC 61850 bağlamında basit bir zihinsel model şöyledir:</p>
+<p>This table is not a product guarantee. The supported standard revision, firmware, port roles, capacity, and interoperability must be verified against vendor documentation.</p>
+<h2>Why does this matter in a substation?</h2>
+<p>Now let us apply this general distinction to a substation.</p>
+<p>A protection relay evaluates quantities such as current and voltage and may decide to open a circuit breaker when defined conditions occur. We should not assume that this chain always depends on Ethernet. Measurement and trip circuits may be fully hardwired. In another design, measurements may be transported as Sampled Values, while status or trip information may be carried through GOOSE.</p>
+<p>A simple mental model in the IEC 61850 context is:</p>
 <ul>
-<li><strong>GOOSE</strong>*, açma, kilitleme veya durum değişikliği gibi olay ve durum bilgisini taşıyabilir.</li>
-<li><strong>Sampled Values</strong>*, akım ve gerilim gibi örneklenmiş proses değerlerinin Ethernet üzerinden iletilmesine yönelik eşlemeyi tanımlar.</li>
-<li><strong>MMS tabanlı iletişim</strong>*, gözetim, raporlama ve kontrol gibi farklı zaman beklentileri olan işlevleri taşıyabilir.</li>
+<li><strong>GOOSE</strong>* can carry event and state information such as trips, interlocks, or state changes.</li>
+<li><strong>Sampled Values</strong>* defines the mapping used to transport sampled process values such as current and voltage over Ethernet.</li>
+<li><strong>MMS-based communication</strong>* can carry functions such as supervision, reporting, and control, each with different timing expectations.</li>
 </ul>
-<p>Buradan “trafo merkezindeki bütün Ethernet paketleri kesintisiz taşınmalı” sonucu çıkmaz. Önce hangi mesajın hangi fiziksel veya operasyonel işlevde kullanıldığına bakmak gerekir. Bir mühendislik erişiminin kısa süreli kesilmesi ile koruma kararında kullanılan iletişimin kesilmesi aynı risk değildir.</p>
-<p>Asıl tasarım sorusu şudur: <strong>Bu işlev, ağın toparlanmasını bekleyebilir mi?</strong>* Cevap evetse RSTP veya MRP gibi toparlanma tabanlı bir yöntem yeterli olabilir. Cevap hayırsa HSR veya PRP gibi ikinci kopyayı önceden taşıyan bir yaklaşım değerlendirilir.</p>
-<h2>SAN, DAN ve RedBox konusu nereden çıktı?</h2>
-<p>HSR ve PRP konuşulmaya başladığında birkaç yeni kısaltma daha gelir:</p>
+<p>This does not mean that every Ethernet packet in a substation must be transported without interruption. We first need to understand which physical or operational function a message supports. A brief interruption to engineering access and an interruption to communication used in a protection decision do not carry the same risk.</p>
+<p>The central design question is: <strong>Can this function wait for the network to recover?</strong>* If the answer is yes, a recovery-based mechanism such as RSTP or MRP may be sufficient. If the answer is no, an approach such as HSR or PRP, which sends the second copy in advance, can be evaluated.</p>
+<h2>Where do SAN, DAN, and RedBox come from?</h2>
+<p>Several more abbreviations appear when discussing HSR and PRP:</p>
 <ul>
-<li><strong>DANH</strong>*, HSR işlevini uygulayan çift bağlantılı düğümdür.</li>
-<li><strong>DANP</strong>*, PRP’nin iki LAN’ına katılan çift bağlantılı düğümdür.</li>
-<li><strong>SAN</strong>*, yedeklilik protokolünü doğal olarak uygulamayan tek bağlantılı düğümdür.</li>
-<li><strong>RedBox</strong>*, SAN ile HSR veya PRP alanı arasında gerekli yedeklilik uyarlamasını yapar.</li>
-<li><strong>VDAN</strong>*, RedBox arkasındaki SAN’ın yedekli ağ açısından sanal bir çift bağlantılı düğüm gibi temsil edilmesini anlatır.</li>
+<li><strong>DANH</strong>* is a doubly attached node that implements HSR.</li>
+<li><strong>DANP</strong>* is a doubly attached node connected to both PRP LANs.</li>
+<li><strong>SAN</strong>* is a singly attached node that does not natively implement the redundancy protocol.</li>
+<li><strong>RedBox</strong>* performs the necessary redundancy adaptation between a SAN and an HSR or PRP domain.</li>
+<li><strong>VDAN</strong>* describes a SAN behind a RedBox being represented to the redundant network as a virtual doubly attached node.</li>
 </ul>
-<p>Bir SAN, PRP ağlarından yalnız birine yedeksiz biçimde bağlanabilir. Aynı cihazın iki PRP LAN’ına yedekli katılması isteniyorsa RedBox gerekir. HSR halkasında ise HSR işlevi olmayan bir SAN doğrudan transit halka düğümü yapılamaz.</p>
-<h2>“Seamless” demek arızayı unutmak demek değildir</h2>
-<p>HSR ve PRP tek yol arızasını uygulamadan gizleyebilir. Bu güzel haberin bir de operasyon tarafı vardır: Uygulama çalışmaya devam ettiği için ilk yolun kaybı fark edilmezse sistem artık yedeksiz çalışıyor olabilir.</p>
-<p>Bu nedenle uygulama erişilebilirliği ile yedeklilik sağlığını ayrı izlemek gerekir. Tasarım ve kabul testinde şu sorular işe yarar:</p>
+<p>A SAN may connect without redundancy to only one of the PRP networks. A RedBox is required if the same device is to participate redundantly in both PRP LANs. In an HSR ring, a SAN without HSR capability cannot act directly as a transit node in the ring.</p>
+<h2>“Seamless” does not mean forgetting the failure</h2>
+<p>HSR and PRP can hide a single-path failure from the application. That benefit has an operational consequence: if the loss of the first path goes unnoticed because the application continues to work, the system may now be operating without redundancy.</p>
+<p>Application availability and redundancy health should therefore be monitored separately. The following questions are useful during design and acceptance testing:</p>
 <ol>
-<li>Hangi işlev bu ağa bağlı ve ne kadar kesintiyi tolere edebilir?</li>
-<li>Tek yol arızası ne kadar sürede ve nerede görünür hâle geliyor?</li>
-<li>Bakım sırasında bir yol kapalıyken oluşan ikinci hata sınandı mı?</li>
-<li>Ortak enerji, kablo güzergâhı veya cihaz iki yolu birden etkileyebilir mi?</li>
-<li>Çoğaltılan trafik ve multicast yükü kapasite hesabına katıldı mı?</li>
-<li>İzleme sensörü iki PRP LAN’ını veya HSR halkanın gerekli kesimlerini gerçekten görüyor mu?</li>
+<li>Which function depends on this network, and how much interruption can it tolerate?</li>
+<li>How quickly, and where, does a single-path failure become visible?</li>
+<li>Has a second failure been tested while one path is unavailable for maintenance?</li>
+<li>Could shared power, a cable route, or a device affect both paths?</li>
+<li>Have duplicated traffic and multicast load been included in the capacity calculation?</li>
+<li>Does the monitoring sensor actually see both PRP LANs or the necessary segments of the HSR ring?</li>
 </ol>
-<p>Paket yakalama tarafında da dikkat gerekir. Aynı çerçevenin iki kopyasını görmek otomatik olarak döngü veya saldırı kanıtı değildir. Tersine, sensör yalnız bir LAN’ı görüyorsa ikinci yolun sağlığı hakkında hüküm veremez. Yakalama konumu ve yinelenen trafik eleme davranışı analiz sonucuyla birlikte kaydedilmelidir.</p>
-<h2>Yedeklilik, siber güvenlik sağlamaz</h2>
-<p>RSTP ve MRP topolojiyi yönetir; HSR ve PRP çerçeveleri çoğaltır. Bu mekanizmalar tek başına gönderenin kimliğini doğrulamaz, mesaj bütünlüğünü sağlamaz veya içeriği şifrelemez.</p>
-<p>IEC 61850 tabanlı haberleşmenin güvenliği ayrıca ele alınmalıdır. IEC 62351-6, IEC 61850’den türeyen protokollerin güvenli çalışmasına yönelik mesaj, prosedür ve algoritmaları tanımlar. Kullanılan ürünün hangi güvenlik profilini ve çalışma modunu gerçekten desteklediği ayrıca doğrulanmalıdır.</p>
-<h2>Sonuç</h2>
-<p>Konu aslında dört kısaltmayı ezberlemekten daha basit:</p>
-<blockquote>RSTP ve MRP arızadan sonra ağı toparlar. HSR ve PRP ise yedek kopyayı arızadan önce yola çıkarır.</blockquote>
-<p>Trafo merkezi haberleşmesi bu farkı görünür kılan güçlü bir örnektir; fakat karar yöntemi daha geneldir. Önce taşınan bilginin işlevini ve kabul edilebilir kesintiyi belirleriz. Sonra topoloji, cihaz desteği, hata alanları, izleme ve maliyet üzerinden doğru yedeklilik yaklaşımını seçeriz.</p>
-<h2>Kanıt sınırı</h2>
-<p>RSTP, MRP, HSR, PRP ve IEC 61850 eşlemelerine ilişkin temel tanımlar resmî IEEE/IEC yayın kayıtları ve üretici uygulama kılavuzuyla <strong>doğrulandı</strong>*. Yakalama konumu ile yinelenen trafik elemenin görünürlüğe etkisine ilişkin operasyon önerileri bu tanımlardan yapılan <strong>çıkarımdır</strong>*.</p>
-<p>Belirli bir saha, ürün veya firmware üzerinde toparlanma süresi ve koruma etkisi ölçülmedi; bunlar <strong>açık</strong>* doğrulama alanlarıdır. Yazı bu nedenle bir ürün uygunluk beyanı veya hazır tasarım reçetesi değildir.</p>
-<h2>Kaynaklar</h2>
+<p>Packet capture requires care as well. Seeing two copies of the same frame is not automatically evidence of a loop or an attack. Conversely, a sensor that sees only one LAN cannot determine the health of the second path. The capture position and duplicate-discard behavior should be recorded with the analysis result.</p>
+<h2>Redundancy does not provide cybersecurity</h2>
+<p>RSTP and MRP manage topology; HSR and PRP duplicate frames. By themselves, these mechanisms do not authenticate the sender, provide message integrity, or encrypt content.</p>
+<p>The security of IEC 61850-based communication must be handled separately. IEC 62351-6 defines messages, procedures, and algorithms for securing protocols derived from IEC 61850. The security profile and operating mode actually supported by the selected product must also be verified.</p>
+<h2>Conclusion</h2>
+<p>The subject is simpler than memorizing four abbreviations:</p>
+<blockquote>RSTP and MRP recover the network after a failure. HSR and PRP send the backup copy before the failure.</blockquote>
+<p>Substation communication is a strong example that makes this distinction visible, but the decision method is more general. First, identify the function of the information being carried and its acceptable interruption. Then select the redundancy approach by considering topology, device support, failure domains, monitoring, and cost.</p>
+<h2>Evidence boundary</h2>
+<p>The basic definitions of RSTP, MRP, HSR, PRP, and the IEC 61850 mappings were <strong>verified</strong>* against official IEEE/IEC publication records and a vendor implementation manual. The operational guidance about capture position and the effect of duplicate discard on visibility is <strong>inferred</strong>* from those definitions.</p>
+<p>Recovery time and protection impact were not measured on a particular site, product, or firmware; these remain <strong>open</strong>* validation areas. This article is therefore neither a product conformity statement nor a ready-made design prescription.</p>
+<h2>Sources</h2>
 <ul>
 <li><a href="https://standards.ieee.org/ieee/802.1Q/10323/" target="_blank" rel="noopener noreferrer">IEEE 802.1Q-2022 — Bridges and Bridged Networks</a></li>
 <li><a href="https://www.ieee802.org/1/pages/802.1w.html" target="_blank" rel="noopener noreferrer">IEEE 802.1 Working Group — Rapid Reconfiguration of Spanning Tree</a></li>
