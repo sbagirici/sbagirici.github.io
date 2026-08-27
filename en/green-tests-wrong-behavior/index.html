@@ -56,6 +56,19 @@ header, main, footer { width: min(1180px, calc(100% - 48px)); margin: auto; }
   text-decoration: none;
 }
 .brand span { color: inherit; }
+.brand-lockup {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  gap: 14px;
+}
+.brand-tagline {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .015em;
+  line-height: 1.35;
+  white-space: nowrap;
+}
 nav { display: flex; flex-wrap: wrap; gap: 22px; }
 nav a {
   padding: 0 0 2px;
@@ -199,6 +212,13 @@ th { background: var(--paper-deep); }
   object-fit: cover;
 }
 .writing-list > h2 { margin: 0 0 28px; font-size: clamp(32px, 4vw, 48px); }
+.preview-drafts { margin: 20px 0 90px; padding: 36px 0 8px; border-top: 1px solid var(--ink); }
+.preview-drafts h2 { margin: .35em 0 24px; font-size: clamp(28px, 3.5vw, 42px); }
+.draft-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
+.draft-link { padding: 19px 0 22px; border-top: 1px solid var(--rule); }
+.draft-link h3 { margin: 7px 0 0; font-size: 20px; }
+.draft-link a { color: var(--ink); text-decoration: none; }
+.draft-link a:hover { color: var(--spot); }
 .actions { display: flex; gap: 18px; }
 .approval-box {
   max-width: 980px;
@@ -223,16 +243,25 @@ th { background: var(--paper-deep); }
 .viewer { text-align: center; }
 .viewer img { max-width: 100%; height: auto; border: 1px solid var(--rule); background: white; }
 footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--muted); font-size: 12px; }
+.footer-row { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
+.footer-row p { margin: 0; }
+.social-links { display: flex; flex-wrap: wrap; gap: 18px; }
+.social-links a { color: var(--muted); font-size: 12px; text-decoration: none; }
+.social-links a:hover { color: var(--spot); }
 @media (max-width: 760px) {
   header, main, footer { width: min(100% - 28px, 1180px); }
   .site-header { align-items: flex-start; flex-direction: column; }
+  .brand-lockup { align-items: flex-start; }
+  .brand-tagline { max-width: 28ch; white-space: normal; }
   nav { gap: 16px; }
   .hero-home { padding: 72px 0; }
   .feature { grid-template-columns: 1fr; }
   .feature-copy { padding: 34px 0 38px; }
   .feature-art { min-height: auto; padding: 30px 0; border-top: 1px solid var(--ink); border-left: 0; background: transparent; }
   .download-grid { grid-template-columns: 1fr; }
+  .draft-list { grid-template-columns: 1fr; }
   .article { padding-top: 16px; }
+  .footer-row { align-items: flex-start; flex-direction: column; }
 }
 
 .site-header .brand {
@@ -242,57 +271,37 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
   letter-spacing: -.06em;
 }
 .hero-home {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
-  align-items: center;
-  gap: clamp(44px, 8vw, 110px);
   max-width: none;
-  padding: clamp(62px, 8vw, 105px) 0;
-}
-.hero-copy h1 { max-width: 680px; }
-.hero-visual {
-  position: relative;
-  min-height: 330px;
-  overflow: hidden;
-  border-top: 1px solid var(--ink);
+  padding: clamp(48px, 7vw, 82px) 0 clamp(42px, 6vw, 70px);
   border-bottom: 1px solid var(--ink);
-  background: var(--teal);
-  color: var(--paper);
 }
-.hero-visual::before {
-  content: "";
-  position: absolute;
-  width: 230px;
-  height: 230px;
-  top: -72px;
-  right: -58px;
-  border: 1px solid rgba(243, 238, 228, .55);
-  border-radius: 50%;
-  box-shadow: 0 0 0 42px rgba(243, 238, 228, .08), 0 0 0 84px rgba(243, 238, 228, .05);
+.home-prompt {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font: clamp(20px, 2.2vw, 27px)/1.55 Georgia, "Times New Roman", serif;
 }
-.hero-monogram {
-  position: absolute;
-  left: 26px;
-  top: 22px;
-  color: transparent;
-  font: 500 clamp(100px, 12vw, 168px)/1 Georgia, "Times New Roman", serif;
-  -webkit-text-stroke: 1px rgba(243, 238, 228, .9);
+.home-prompt strong {
+  color: var(--ink);
+  font-weight: 700;
 }
-.hero-index {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  left: 26px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid rgba(243, 238, 228, .55);
+.home-note {
+  padding: 5px 0 5px 26px;
+  border-left: 1px solid var(--rule);
 }
-.hero-index span {
-  padding: 13px 8px 0 0;
+.home-note .meta {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--spot);
   font-size: 11px;
-  font-weight: 750;
-  letter-spacing: .09em;
+  font-weight: 800;
+  letter-spacing: .12em;
   text-transform: uppercase;
+}
+.home-note p {
+  margin: 0;
+  color: var(--muted);
+  font: 16px/1.55 Georgia, "Times New Roman", serif;
 }
 .feature { grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr); margin-bottom: 72px; }
 .feature-art {
@@ -319,10 +328,8 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 }
 .about { margin-bottom: 58px; padding: 40px 0 48px; }
 @media (max-width: 760px) {
-  .hero-home { grid-template-columns: 1fr; gap: 42px; padding: 58px 0 64px; }
-  .hero-visual { min-height: 250px; }
-  .hero-index { grid-template-columns: 1fr; }
-  .hero-index span { padding-top: 7px; }
+  .hero-home { padding: 48px 0 44px; }
+  .home-note { max-width: 32ch; padding: 18px 0 0; border-top: 1px solid var(--rule); border-left: 0; }
   .feature { grid-template-columns: 1fr; }
   .feature-art { padding: 18px 14px 22px; background: #0b2230; }
   .feature-art img { min-height: 0; }
@@ -373,14 +380,49 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 .editorial-note p { margin: 0; color: var(--muted); font: 14px/1.58 ui-sans-serif, system-ui, sans-serif; }
 .about-disclaimer { margin-top: 48px; padding: 26px 0; border-top: 1px solid var(--ink); }
 .about-disclaimer p { color: var(--muted); font-size: 13px; }
+.profile-links { display: flex; flex-wrap: wrap; gap: 22px; margin: 38px 0 0; }
+.profile-links a { color: var(--ink); font-weight: 750; text-decoration: none; border-bottom: 1px solid var(--spot); }
+.contact-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(250px, .55fr);
+  gap: clamp(46px, 8vw, 110px);
+  padding: clamp(58px, 8vw, 100px) 0 96px;
+}
+.contact-copy h1 { margin-top: .25em; font-size: clamp(48px, 6.5vw, 78px); }
+.contact-copy .lead { max-width: 660px; }
+.contact-form { max-width: 700px; margin-top: 42px; }
+.form-field { margin: 0 0 24px; }
+.form-field label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 800; }
+.form-field input, .form-field textarea {
+  width: 100%;
+  padding: 12px 13px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: #faf7f0;
+  color: var(--ink);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.form-field textarea { min-height: 180px; resize: vertical; }
+.form-field input:focus, .form-field textarea:focus { outline: 2px solid var(--spot); outline-offset: 2px; }
+.form-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-note { max-width: 64ch; color: var(--muted); font-size: 12px; }
+.contact-submit { margin-top: 22px; padding: 11px 17px; border: 1px solid var(--spot); border-radius: 2px; background: var(--spot); color: white; font: inherit; font-weight: 800; cursor: pointer; }
+.contact-submit:disabled { cursor: not-allowed; opacity: .52; }
+.contact-aside { padding: 24px 0 0 28px; border-left: 1px solid var(--rule); }
+.contact-aside h2 { margin: .35em 0 .65em; font-size: 29px; }
+.contact-aside p { color: var(--muted); }
+.contact-result { max-width: 760px; padding: clamp(76px, 12vw, 160px) 0; }
+.contact-result h1 { font-size: clamp(46px, 7vw, 82px); }
 @media (max-width: 760px) {
   .about, .about-page-hero { grid-template-columns: 1fr; }
   .about-portrait { max-width: 100%; }
   .about-page-hero .about-portrait { grid-row: 1; justify-self: stretch; max-height: 520px; }
   .curiosity-grid { grid-template-columns: 1fr 1fr; }
+  .contact-page { grid-template-columns: 1fr; gap: 34px; padding-top: 46px; }
+  .contact-aside { padding: 24px 0 0; border-top: 1px solid var(--rule); border-left: 0; }
 }
 @media (max-width: 480px) { .curiosity-grid { grid-template-columns: 1fr; } }
-</style><body><header class=site-header><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/green-tests-wrong-behavior/' lang='tr'>TR</a></nav></header><main><section class=hero><div class=eyebrow>Work &amp; Research · OT Security</div><p><a href='/green-tests-wrong-behavior/'>Türkçe oku →</a></p></section><article class=article><div class=article-meta><span>Article: OTB-2026-003</span><span>Version 0.1</span><span>7 min read</span><span>Published</span></div><h1>Green Tests, Reversed Behavior</h1>
+</style><body><header class=site-header><div class=brand-lockup><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><span class=brand-tagline>A personal space for my work, ideas, and things I find worth keeping.</span></div><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/green-tests-wrong-behavior/' lang='tr'>TR</a></nav></header><main><section class=hero><div class=eyebrow>Work &amp; Research · OT Security</div><p><a href='/green-tests-wrong-behavior/'>Türkçe oku →</a></p></section><article class=article><div class=article-meta><span>Article: OTB-2026-003</span><span>Version 0.1</span><span>7 min read</span><span>Published</span></div><h1>Green Tests, Reversed Behavior</h1>
 <p>A fully passing test suite is comforting. But tests answer only the questions they ask. If code and tests use the same dictionary, constant, or mistaken assumption, the system can be perfectly self-consistent—and wrong about the outside world.</p>
 <p>This is particularly dangerous in protocol engineering. A message may have the right length, pass its integrity check, and be accepted by a parser. Yet the value believed to mean “start” may actually mean “stop.”</p>
 <p><img src="/raw/assets/semantic-oracle.svg?v=507281e0a1b7" alt="Code and tests sharing an assumption, compared with external validation"></p>
@@ -419,4 +461,4 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 <li><a href="https://arxiv.org/abs/2312.06875" target="_blank" rel="noopener noreferrer">Eywa: Automating Model Based Testing Using Large Language Models</a></li>
 <li><a href="https://arxiv.org/abs/2504.18050" target="_blank" rel="noopener noreferrer">Traceable Specification Validation for Network Protocols</a></li>
 <li><a href="https://doi.org/10.1109/MRL.2024.3389629" target="_blank" rel="noopener noreferrer">NIST — Combinatorial Coverage Measures for Testing</a></li>
-</ul></article></main><footer><p>© 2026 Selman Bağırıcı</p></footer></body></html>
+</ul></article></main><footer><div class=footer-row><p>© 2026 Selman Bağırıcı</p><nav class=social-links aria-label='Social links'><a href='https://www.linkedin.com/in/selmanbag' target=_blank rel='me noopener noreferrer'>LinkedIn</a><a href='https://www.instagram.com/mykindx/' target=_blank rel='me noopener noreferrer'>Instagram · @mykindx</a></nav></div></footer></body></html>
