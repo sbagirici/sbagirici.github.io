@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="840" viewBox="0 0 1200 840" role="img" aria-labelledby="dcp-topo-title dcp-topo-desc" font-family="Segoe Print, Chalkboard, DejaVu Sans, sans-serif">
+<title id="dcp-topo-title">Üretim hücresinde yerel DCP yolu — cihaz simgeleriyle topoloji</title>
+<desc id="dcp-topo-desc">Örnek topolojide üst ağ bulutu tuğla simgeli güvenlik duvarıyla hücre anahtarına bağlanır. Ele geçirilmiş mühendislik istasyonu dizüstü bilgisayar, anahtar portlu switch, hedef PROFINET cihazı modüler saha cihazı olarak çizilmiştir. PLC, HMI ve sürücü aynı Ethernet alanında anahtara bağlıdır. Turuncu DCP yolu istasyondan anahtar üzerinden hedefin kendi yapılandırma işlevine gider; güvenlik duvarından veya PLC programlama arayüzünden geçmez. Bu iletişim üreticinin PLC programlama yazılımına bağlı değildir. Cihazın ilgili yazmayı kabul ettiği ve kaynak istasyonun DCP gönderebildiği varsayılır. Anahtarın ayrı mor kesik SPAN hattı OT sensörüne trafik kopyalar. Cihaz simgeleri temsili olup ürün, port sayısı veya özel mimari göstermez. Port yalıtımı ve yerel Ethernet filtrelemesi uygulanmadığı varsayılır.</desc>
+<defs><marker id="dcp-topo-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#d55b30" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect width="1200" height="840" rx="8" fill="#f8fafc"/>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+<text x="42" y="44" fill="#213547" stroke="none" font-size="27" text-anchor="start" font-weight="600">Somut örnek: PROFINET DCP</text>
+<path d="M603 151 Q602 171 605 191" stroke="#7d8994" stroke-width="2.4" fill="none" />
+<path d="M604 261 Q602 334 605 417" stroke="#7d8994" stroke-width="2.4" fill="none" />
+<path d="M289 455 Q390 457 499 454" stroke="#7d8994" stroke-width="2.4" fill="none" />
+<path d="M706 454 Q816 456 922 454" stroke="#7d8994" stroke-width="2.4" fill="none" />
+<path d="M550 481 L551 567 Q551 571 545 570 L188 570 Q184 570 184 576 L185 615" stroke="#7d8994" stroke-width="2.4" fill="none" />
+<path d="M605 481 L606 585 L446 584 L445 621" stroke="#7d8994" stroke-width="2.4" fill="none" />
+<path d="M659 481 L660 596 L700 597 L701 615" stroke="#7d8994" stroke-width="2.4" fill="none" />
+<path d="M706 477 L801 476 L800 568 L1013 567 L1014 624" stroke="#7760ad" stroke-width="2.5" fill="none" stroke-dasharray="7 6"/>
+<path d="M55 301 Q50 302 49 311 L50 738 Q50 746 58 746 L1142 745 Q1152 745 1151 734 L1150 310 Q1150 300 1141 301 Z" stroke="#7d8994" stroke-width="1.6" fill="none" stroke-dasharray="9 7"/>
+<text x="72" y="336" fill="#213547" stroke="none" font-size="22" text-anchor="start" font-weight="600">Hücre VLAN’ı / aynı Ethernet alanı</text>
+<text x="633" y="377" fill="#7d8994" stroke="none" font-size="17" text-anchor="start">Üst ağ trafiği</text>
+<text x="848" y="594" fill="#7760ad" stroke="none" font-size="17" text-anchor="start">SPAN kopyası</text>
+<g id="dcp-icon-upper-network">
+<path d="M550 145 C525 147 519 118 540 106 C537 81 566 71 582 87 C600 65 634 78 641 98 C667 88 687 111 673 128 C694 151 658 160 642 150 L550 151 Z" stroke="#213547" stroke-width="2.3" fill="#e5edf3" />
+<path d="M544 104 C540 85 563 75 580 90 M641 101 C661 92 681 110 673 125" stroke="#213547" stroke-width="0.8" fill="none" opacity=".45"/>
+<text x="607" y="125" fill="#213547" stroke="none" font-size="21" text-anchor="middle" font-weight="600">Üst ağ</text>
+</g>
+<g id="dcp-icon-firewall">
+<path d="M531 194 L548 182 L690 183 L674 195 Z" stroke="#213547" stroke-width="2" fill="#edd8cd" />
+<path d="M674 195 L690 183 L690 248 L674 261 Z" stroke="#213547" stroke-width="2" fill="#e1c0ad" />
+<path d="M530 196 Q602.0 194 674 195 L675 261 Q602.0 260 529 262 Z" stroke="#213547" stroke-width="2" fill="#f3e3da" />
+<path d="M529 198 Q602.0 196 672 197 L673 260" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M531 217 Q600 216 673 217" stroke="#213547" stroke-width="1.5" fill="none" />
+<path d="M531 239 Q600 238 673 239" stroke="#213547" stroke-width="1.5" fill="none" />
+<path d="M577 196 L578 217" stroke="#213547" stroke-width="1.4" fill="none" />
+<path d="M626 195 L627 217" stroke="#213547" stroke-width="1.4" fill="none" />
+<path d="M554 218 L555 239" stroke="#213547" stroke-width="1.4" fill="none" />
+<path d="M602 218 L603 239" stroke="#213547" stroke-width="1.4" fill="none" />
+<path d="M650 218 L651 239" stroke="#213547" stroke-width="1.4" fill="none" />
+<path d="M578 240 L579 259" stroke="#213547" stroke-width="1.4" fill="none" />
+<path d="M626 240 L627 260" stroke="#213547" stroke-width="1.4" fill="none" />
+<text x="730" y="216" fill="#213547" stroke="none" font-size="22" text-anchor="start" font-weight="600">FW · Güvenlik duvarı</text>
+<text x="730" y="244" fill="#7d8994" stroke="none" font-size="17" text-anchor="start">Üst ağ bağlantısını denetler</text>
+</g>
+<g id="dcp-icon-engineering-station">
+<path d="M150 390 Q214.5 388 279 389 L280 467 Q214.5 466 149 468 Z" stroke="#213547" stroke-width="2" fill="#f8fafc" />
+<path d="M149 392 Q214.5 390 277 391 L278 466" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M158 398 L270 398 L270 458 L159 459 Z" stroke="#213547" stroke-width="1.6" fill="#e5edf3" />
+<path d="M150 467 L132 485 Q209 488 293 485 L279 467 Z" stroke="#213547" stroke-width="2.3" fill="#d9e3eb" />
+<path d="M187 476 L238 477 M199 482 L224 482" stroke="#213547" stroke-width="1.3" fill="none" />
+<path d="M173 433 L187 419 L200 435 L219 411 L235 432 L256 414" stroke="#7d8994" stroke-width="1.6" fill="none" />
+<path d="M278 374 L298 408 L257 408 Z" stroke="#d55b30" stroke-width="2" fill="#fff0e7" />
+<path d="M278 386 L278 395" stroke="#d55b30" stroke-width="2.2" fill="none" />
+<path d="M278 401 L278 402" stroke="#d55b30" stroke-width="2.8" fill="none" />
+<text x="213" y="524" fill="#213547" stroke="none" font-size="20" text-anchor="middle" font-weight="600">Mühendislik istasyonu</text>
+<text x="213" y="550" fill="#d55b30" stroke="none" font-size="17" text-anchor="middle">Ele geçirilmiş (varsayım)</text>
+</g>
+<g id="dcp-icon-switch">
+<path d="M500 438 L521 414 L728 415 L706 438 Z" stroke="#213547" stroke-width="2.2" fill="#e8f0f6" />
+<path d="M706 438 L728 415 L728 459 L706 481 Z" stroke="#213547" stroke-width="2.2" fill="#cbd8e3" />
+<path d="M499 439 Q602.5 437 706 438 L707 482 Q602.5 481 498 483 Z" stroke="#213547" stroke-width="2" fill="#dce7ee" />
+<path d="M498 441 Q602.5 439 704 440 L705 481" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M516 451 L533 451 L533 465 L529 465 L529 469 L520 469 L520 465 L516 465 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M520 453 V458 M524 453 V458 M528 453 V458" stroke="#7d8994" stroke-width="0.8" fill="none" />
+<path d="M541 451 L558 451 L558 465 L554 465 L554 469 L545 469 L545 465 L541 465 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M545 453 V458 M549 453 V458 M553 453 V458" stroke="#7d8994" stroke-width="0.8" fill="none" />
+<path d="M566 451 L583 451 L583 465 L579 465 L579 469 L570 469 L570 465 L566 465 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M570 453 V458 M574 453 V458 M578 453 V458" stroke="#7d8994" stroke-width="0.8" fill="none" />
+<path d="M591 451 L608 451 L608 465 L604 465 L604 469 L595 469 L595 465 L591 465 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M595 453 V458 M599 453 V458 M603 453 V458" stroke="#7d8994" stroke-width="0.8" fill="none" />
+<path d="M616 451 L633 451 L633 465 L629 465 L629 469 L620 469 L620 465 L616 465 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M620 453 V458 M624 453 V458 M628 453 V458" stroke="#7d8994" stroke-width="0.8" fill="none" />
+<path d="M641 451 L658 451 L658 465 L654 465 L654 469 L645 469 L645 465 L641 465 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M645 453 V458 M649 453 V458 M653 453 V458" stroke="#7d8994" stroke-width="0.8" fill="none" />
+<path d="M666 451 L683 451 L683 465 L679 465 L679 469 L670 469 L670 465 L666 465 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M670 453 V458 M674 453 V458 M678 453 V458" stroke="#7d8994" stroke-width="0.8" fill="none" />
+<path d="M551 427 L585 426 M579 421 L585 426 L579 430 M647 422 L614 423 M620 418 L614 423 L620 428" stroke="#213547" stroke-width="1.6" fill="none" />
+<rect x="478" y="504" width="254" height="26" fill="#f8fafc" stroke="none"/>
+<text x="604" y="524" fill="#213547" stroke="none" font-size="21" text-anchor="middle" font-weight="600">SW · Hücre anahtarı</text>
+</g>
+<g id="dcp-icon-profinet-target">
+<path d="M932 397 L946 386 L1039 386 L1024 398 Z" stroke="#213547" stroke-width="2.1" fill="#dce7ee" />
+<path d="M1024 398 L1039 386 L1039 474 L1024 487 Z" stroke="#213547" stroke-width="2.1" fill="#cbd8e3" />
+<path d="M931 399 Q977.5 397 1024 398 L1025 486 Q977.5 485 930 487 Z" stroke="#213547" stroke-width="2" fill="#f8fafc" />
+<path d="M930 401 Q977.5 399 1022 400 L1023 485" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M948 399 L948 486 M974 399 L974 486 M999 399 L999 486" stroke="#213547" stroke-width="1.5" fill="none" />
+<path d="M958 414 L965 415" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M958 428 L965 429" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M958 442 L965 443" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M958 457 L965 458" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M983 414 L990 415" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M983 428 L990 429" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M983 442 L990 443" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M983 457 L990 458" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M1008 414 L1015 415" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M1008 428 L1015 429" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M1008 442 L1015 443" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M1008 457 L1015 458" stroke="#7d8994" stroke-width="1.8" fill="none" />
+<path d="M932 435 L943 435 L943 455 L932 455 Z" stroke="#213547" stroke-width="1.4" fill="#e5edf3" />
+<path d="M923 475 L1031 476 M934 493 L1021 492" stroke="#7d8994" stroke-width="1.5" fill="none" />
+<text x="984" y="524" fill="#213547" stroke="none" font-size="21" text-anchor="middle" font-weight="600">PROFINET cihazı</text>
+<text x="984" y="550" fill="#d55b30" stroke="none" font-size="17" text-anchor="middle">DCP yazma erişimi açık</text>
+</g>
+<g id="dcp-icon-plc">
+<path d="M120 681 L249 679 M126 618 L249 618" stroke="#7d8994" stroke-width="2.3" fill="none" />
+<path d="M134 616 Q153.5 614 173 615 L174 680 Q153.5 679 133 681 Z" stroke="#213547" stroke-width="2" fill="#e5edf3" />
+<path d="M133 618 Q153.5 616 171 617 L172 679" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M141 627 L164 627 L164 641 L141 641 Z" stroke="#213547" stroke-width="1.4" fill="#f8fafc" />
+<path d="M144 651 L154 651 M144 658 L163 658 M144 666 L163 666" stroke="#7d8994" stroke-width="1.4" fill="none" />
+<path d="M179 623 Q188.0 621 197 622 L198 680 Q188.0 679 178 681 Z" stroke="#213547" stroke-width="2" fill="#f8fafc" />
+<path d="M178 625 Q188.0 623 195 624 L196 679" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M184 631 L192 631" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M184 641 L192 641" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M184 651 L192 651" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M184 664 L192 664" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M184 674 L192 674" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M203 623 Q212.0 621 221 622 L222 680 Q212.0 679 202 681 Z" stroke="#213547" stroke-width="2" fill="#f8fafc" />
+<path d="M202 625 Q212.0 623 219 624 L220 679" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M208 631 L216 631" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M208 641 L216 641" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M208 651 L216 651" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M208 664 L216 664" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M208 674 L216 674" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M227 623 Q236.0 621 245 622 L246 680 Q236.0 679 226 681 Z" stroke="#213547" stroke-width="2" fill="#f8fafc" />
+<path d="M226 625 Q236.0 623 243 624 L244 679" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M232 631 L240 631" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M232 641 L240 641" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M232 651 L240 651" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M232 664 L240 664" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<path d="M232 674 L240 674" stroke="#7d8994" stroke-width="1.3" fill="none" />
+<text x="185" y="709" fill="#213547" stroke="none" font-size="21" text-anchor="middle" font-weight="600">PLC</text>
+<text x="185" y="731" fill="#7d8994" stroke="none" font-size="16" text-anchor="middle">Kontrolör</text>
+</g>
+<g id="dcp-icon-hmi">
+<path d="M387 622 Q445.0 620 503 621 L504 686 Q445.0 685 386 687 Z" stroke="#213547" stroke-width="2" fill="#e5edf3" />
+<path d="M386 624 Q445.0 622 501 623 L502 685" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M396 630 L483 630 L483 673 L396 673 Z" stroke="#213547" stroke-width="1.5" fill="#f8fafc" />
+<path d="M408 662 V649 H423 V637 H442 V654 H470" stroke="#7d8994" stroke-width="1.5" fill="none" />
+<path d="M492 638 L493 639 M492 651 L493 652 M492 665 L493 666" stroke="#213547" stroke-width="3" fill="none" />
+<path d="M432 686 L431 693 L460 693 L459 686" stroke="#213547" stroke-width="1.7" fill="none" />
+<text x="445" y="709" fill="#213547" stroke="none" font-size="21" text-anchor="middle" font-weight="600">HMI</text>
+<text x="445" y="731" fill="#7d8994" stroke="none" font-size="16" text-anchor="middle">Operatör ekranı</text>
+</g>
+<g id="dcp-icon-drive">
+<path d="M670 616 Q702.0 614 734 615 L735 687 Q702.0 686 669 688 Z" stroke="#213547" stroke-width="2" fill="#e5edf3" />
+<path d="M669 618 Q702.0 616 732 617 L733 686" stroke="#213547" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M680 624 L724 624 L724 640 L680 640 Z" stroke="#213547" stroke-width="1.5" fill="#f8fafc" />
+<path d="M680 649 L686 649 M695 649 L701 649 M717 648 L717 650" stroke="#213547" stroke-width="1.8" fill="none" />
+<path d="M680 658 L723 657" stroke="#7d8994" stroke-width="1.2" fill="none" />
+<path d="M680 664 L723 663" stroke="#7d8994" stroke-width="1.2" fill="none" />
+<path d="M680 670 L723 669" stroke="#7d8994" stroke-width="1.2" fill="none" />
+<path d="M680 676 L723 675" stroke="#7d8994" stroke-width="1.2" fill="none" />
+<path d="M668 620 L663 620 L663 680 L668 680 M736 620 L741 620 L741 680 L736 680" stroke="#213547" stroke-width="1.3" fill="none" />
+<text x="702" y="709" fill="#213547" stroke="none" font-size="21" text-anchor="middle" font-weight="600">Sürücü</text>
+<text x="702" y="731" fill="#7d8994" stroke="none" font-size="16" text-anchor="middle">Saha ekipmanı</text>
+</g>
+<g id="dcp-icon-sensor">
+<path d="M958 643 L973 625 L1074 625 L1059 643 Z" stroke="#7760ad" stroke-width="2" fill="#eeeaf7" />
+<path d="M1059 643 L1074 625 L1074 666 L1059 682 Z" stroke="#7760ad" stroke-width="2" fill="#ddd5ef" />
+<path d="M958 644 Q1008.5 642 1059 643 L1060 682 Q1008.5 681 957 683 Z" stroke="#7760ad" stroke-width="2" fill="#f8fafc" />
+<path d="M957 646 Q1008.5 644 1057 645 L1058 681" stroke="#7760ad" stroke-width="0.7" fill="none" opacity=".4"/>
+<path d="M987 657 Q1009 640 1030 657 Q1008 676 987 657 Z" stroke="#7760ad" stroke-width="1.6" fill="none" />
+<path d="M1009 650 Q1020 657 1009 664 Q998 657 1009 650 Z" stroke="#7760ad" stroke-width="1.4" fill="#ddd5ef" />
+<path d="M967 670 L977 670 M1041 669 L1047 669" stroke="#7760ad" stroke-width="2" fill="none" />
+<text x="1014" y="709" fill="#7760ad" stroke="none" font-size="21" text-anchor="middle" font-weight="600">OT sensörü</text>
+<text x="1014" y="731" fill="#7760ad" stroke="none" font-size="16" text-anchor="middle">Yerel gözlem</text>
+</g>
+<g class="lateral-route" id="dcp-local-route">
+<path d="M296 454 Q391 451 491 454" stroke="#d55b30" stroke-width="3" fill="none" marker-end="url(#dcp-topo-arrow)"/>
+<path d="M738 454 Q825 450 920 454" stroke="#d55b30" stroke-width="3" fill="none" marker-end="url(#dcp-topo-arrow)"/>
+<text x="389" y="426" fill="#d55b30" stroke="none" font-size="20" text-anchor="middle" font-weight="600">DCP</text>
+<text x="822" y="426" fill="#d55b30" stroke="none" font-size="20" text-anchor="middle" font-weight="600">DCP</text>
+</g>
+<path d="M53 783 Q67 780 83 783" stroke="#d55b30" stroke-width="3" fill="none" />
+<text x="95" y="790" fill="#d55b30" stroke="none" font-size="19" text-anchor="start" font-weight="600">Yerel DCP yolu: istasyon → anahtar → hedef. PLC programlama arayüzüne uğramaz.</text>
+<text x="53" y="822" fill="#7d8994" stroke="none" font-size="17" text-anchor="start">Örnek topoloji: port yalıtımı veya yerel Ethernet filtrelemesi uygulanmıyor.</text>
+</g></svg>

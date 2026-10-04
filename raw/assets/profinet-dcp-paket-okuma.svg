@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="688" viewBox="0 0 1080 688" role="img" aria-labelledby="dcp-packet-title dcp-packet-desc" font-family="DejaVu Sans, Segoe UI, sans-serif">
+<title id="dcp-packet-title">DCP Set isteğinde yeni cihaz adının bulunduğu alan</title>
+<desc id="dcp-packet-desc">Dosyadan tcpdump 4.99.4 ve TShark 4.2.2 ile çözümlenen tek sentetik Set isteği. Ethernet kaynağı 02:00:00:00:00:01, hedefi 02:00:00:00:00:02. Ethernet türü 0x8892 PROFINET, FrameID 0xfefd DCP Get/Set, ServiceID Set, ServiceType Request. Xid istek yanıt eşleştirmesi içindir; kimlik doğrulaması değildir. Device properties ve Name of Station seçenekleri cihaz adını seçer. BlockQualifier kalıcı saklamayı talep eder; NameOfStation değeri dolum-io-02 olarak verilmiştir. Yeni ad bu etiketsiz Ethernet örneğinde sıfırdan sayılan 32–42 konumlarındadır. tcpdump bu sürümde yalnız Ethernet özetini, TShark DCP alanlarını gösterdi. Konumlar farklı blok dizilimi, VLAN veya kapsüllemede değişir. Bu paket gönderilmedi; hedef kabulü ve gerçek değişiklik ölçülmedi.</desc>
+<rect width="1080" height="688" rx="8" fill="#f8fafc"/>
+<text x="30" y="43" font-size="28" font-weight="650" fill="#213547">Yeni cihaz adı, isteğin içinde</text>
+<text x="30" y="70" font-size="17" fill="#526a78">Dosyadan okuma · tcpdump 4.99.4 + TShark 4.2.2 · Sentetik Set isteği</text>
+<rect x="26" y="89" width="1028" height="86" rx="6" fill="#152431"/>
+
+<text x="44" y="121" font-size="17" fill="#f8fafc" font-family="DejaVu Sans Mono, monospace">$ tcpdump -nn -e -t -r dcp-ornek.pcap 'ether proto 0x8892'</text>
+<text x="44" y="155" font-size="17" fill="#d2e3ed" font-family="DejaVu Sans Mono, monospace">02:00:00:00:00:01 &gt; 02:00:00:00:00:02, ethertype Unknown (0x8892), length 60:</text>
+<text x="42" y="213" font-size="17" fill="#526a78">Konum</text>
+<text x="159" y="213" font-size="17" fill="#526a78">TShark ile çözümlenen alan</text>
+<text x="666" y="213" font-size="17" fill="#526a78">İsteğin anlamı</text>
+<path d="M30 229 H1049" stroke="#d4dfe5" stroke-width="1"/>
+<text x="42" y="262" font-size="20" fill="#7d8994" font-family="DejaVu Sans Mono, monospace">0–11</text>
+<text x="159" y="262" font-size="19" fill="#213547" font-family="DejaVu Sans Mono, monospace">Kaynak MAC → Hedef MAC</text>
+<text x="666" y="262" font-size="17" fill="#526a78">İstasyon doğrudan cihaza sesleniyor.</text>
+<path d="M30 281 H1049" stroke="#d4dfe5" stroke-width="1"/>
+<text x="42" y="314" font-size="20" fill="#7d8994" font-family="DejaVu Sans Mono, monospace">12–15</text>
+<text x="159" y="314" font-size="19" fill="#213547" font-family="DejaVu Sans Mono, monospace">0x8892 / FrameID 0xfefd</text>
+<text x="666" y="314" font-size="17" fill="#526a78">PROFINET içinde DCP Get/Set.</text>
+<path d="M30 333 H1049" stroke="#d4dfe5" stroke-width="1"/>
+<text x="42" y="366" font-size="20" fill="#7d8994" font-family="DejaVu Sans Mono, monospace">16–17</text>
+<text x="159" y="366" font-size="19" fill="#213547" font-family="DejaVu Sans Mono, monospace">ServiceID: Set / ServiceType: Request</text>
+<text x="666" y="366" font-size="17" fill="#526a78">Hedeften yapılandırma yazması isteniyor.</text>
+<path d="M30 385 H1049" stroke="#d4dfe5" stroke-width="1"/>
+<text x="42" y="418" font-size="20" fill="#7d8994" font-family="DejaVu Sans Mono, monospace">18–21</text>
+<text x="159" y="418" font-size="19" fill="#213547" font-family="DejaVu Sans Mono, monospace">Xid: 0x00000001</text>
+<text x="666" y="418" font-size="17" fill="#526a78">Eşleştirme bilgisi; yetki kanıtı değil.</text>
+<path d="M30 437 H1049" stroke="#d4dfe5" stroke-width="1"/>
+<text x="42" y="470" font-size="20" fill="#7d8994" font-family="DejaVu Sans Mono, monospace">26–27</text>
+<text x="159" y="470" font-size="19" fill="#213547" font-family="DejaVu Sans Mono, monospace">Device properties / Name of Station</text>
+<text x="666" y="470" font-size="17" fill="#526a78">Değişikliğin konusu cihaz adı.</text>
+<path d="M30 489 H1049" stroke="#d4dfe5" stroke-width="1"/>
+<text x="42" y="522" font-size="20" fill="#7d8994" font-family="DejaVu Sans Mono, monospace">30–31</text>
+<text x="159" y="522" font-size="19" fill="#213547" font-family="DejaVu Sans Mono, monospace">BlockQualifier: permanent</text>
+<text x="666" y="522" font-size="17" fill="#526a78">Kalıcı saklama talebi; kabul kanıtı değil.</text>
+<rect x="27" y="541" width="1026" height="51" rx="4" fill="#fff0e7" stroke="#d55b30" stroke-width="1.5"/>
+<text x="42" y="574" font-size="20" fill="#7d8994" font-family="DejaVu Sans Mono, monospace">32–42</text>
+<text x="159" y="574" font-size="19" fill="#d55b30" font-weight="650" font-family="DejaVu Sans Mono, monospace">NameOfStation: dolum-io-02</text>
+<text x="666" y="574" font-size="17" fill="#d55b30" font-weight="650">Değiştirilmek istenen yeni değer.</text>
+<text x="30" y="635" font-size="19" fill="#213547" font-weight="650">NameOfStation: pakette taşınan yeni ad. Eski ad bu alanın içinde yer almıyor.</text>
+<text x="30" y="667" font-size="17" fill="#526a78">Konumlar sıfırdan sayılır ve yalnız bu etiketsiz Ethernet örneğine aittir.</text>
+</svg>
