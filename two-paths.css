@@ -1,0 +1,30 @@
+.two-paths{position:relative;display:grid;grid-template-columns:1fr 1fr;max-width:1240px;margin:auto;padding:65px 6vw 60px;min-height:620px;isolation:isolate;scroll-margin-top:0}
+.two-paths::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 34% 60% at var(--light-x,50%) var(--light-y,45%),#fffaf0 0%,transparent 85%);opacity:.7;pointer-events:none;z-index:-1}
+.path{position:relative;display:flex;flex-direction:column;justify-content:center;padding:25px 38px 15px;min-width:0;transition:color .35s}
+.path:first-child{padding-left:0;border-right:1px solid #bfc3b244}
+.path:last-child{padding-right:0;padding-left:45px}
+.path-title{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.path h2{font:500 clamp(30px,3.6vw,45px)/1.15 'Segoe UI',Arial,sans-serif;letter-spacing:-.04em;margin:0}
+.path-arrow{font:26px 'Segoe UI',sans-serif;color:#929a85;transition:transform .35s,color .35s}
+.path-hint{font:14px/1.6 'Segoe UI',Arial,sans-serif;color:#7a826f;margin:13px 0 25px}
+.path-art{height:270px;display:flex;align-items:center;justify-content:center;pointer-events:none;transition:transform .65s,opacity .65s;opacity:.9;transform:translate(var(--art-x,0px),var(--art-y,0px));overflow:visible;mask-image:none}
+.path-art img{width:100%;max-width:100%;height:auto;max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.path-writing .path-art{transform:translate(var(--art-x,0px),var(--art-y,0px))}
+.path:hover,.path:focus-visible{color:#825b43}
+.path:hover .path-arrow,.path:focus-visible .path-arrow{color:#825b43;transform:translate(4px,-4px)}
+.path:hover .path-art,.path:focus-visible .path-art{opacity:1}
+.path:focus-visible{outline-offset:-8px}
+.archive-page header{position:relative;color:var(--ink);padding:26px 6vw;border-bottom:1px solid var(--rule)}
+.archive-page .spread{padding-top:55px;min-height:70svh}
+.archive-page .experiences{margin-top:0;padding-top:0;border-top:0}
+.archive-page .section-head{padding-bottom:28px}
+.archive-page .section-head h1{font:500 30px/1.2 'Segoe UI',Arial,sans-serif;letter-spacing:-.035em;margin:0}
+.archive-page header nav{font-family:'Segoe UI',Arial,sans-serif;letter-spacing:0;font-size:13px}
+.archive-page header a[aria-current=page]{color:var(--accent)}
+.archive-page footer{margin-top:30px}
+.archive-page.deneyimler .experience-art{aspect-ratio:1.9}
+.archive-page.deneyimler .experience-art[data-topic=road],.archive-page.deneyimler .experience-art[data-topic=bench]{aspect-ratio:1.8}
+.path-writing .path-art{opacity:.8}
+@media(max-width:650px){.two-paths{display:block;min-height:0;padding:35px 6vw 30px}.path,.path:first-child,.path:last-child{padding:24px 0 12px;border-right:0}.path:first-child{border-bottom:1px solid #bfc3b255}.path h2{font-size:32px}.path-hint{margin:8px 0 12px}.path-art{height:170px;opacity:.85}.path-art img{width:95%}.path:last-child{padding-top:30px}.path-arrow{font-size:24px}.archive-page header nav{gap:14px}.archive-page .spread{padding-top:32px}.archive-page .experiences .section-head{padding-top:0}.archive-page header nav>a:nth-child(3){display:none}}
+@media(prefers-reduced-motion:reduce){.path,.path-art,.path-arrow{transition:none!important;transform:none!important}}
+.path-writing .path-art img{filter:brightness(1.045)}
