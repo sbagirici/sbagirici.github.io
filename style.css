@@ -29,3 +29,7 @@ article:not(.featured)>a{grid-template-columns:minmax(0,1fr) 28px}
 .section-head h2{margin-top:0}
 .mobile-sections a{justify-content:flex-start}
 @media(max-width:650px){.brand{font-size:12px}}
+
+/* Personal signature, shared by the welcome and archive navigation. */
+.brand{font:600 24px/1 'Segoe UI',Arial,sans-serif;letter-spacing:-.07em;display:inline-flex;align-items:center;min-width:44px;min-height:44px}
+@media(max-width:650px){.pressure-welcome-canvas{opacity:.72}}

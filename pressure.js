@@ -33,8 +33,10 @@ function initField(section) {
     { amp: 6, sx: 0.22, sy: 0.24, ax: 0.78, ay: 0.20, fx: 0.021, fy: 0.029, px: 4.0, py: 2.6 },
   ];
   const cursor = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, strength: 0, target: 0 };
-  let motionAllowed = !reduceMotion.matches;
+  let motionAllowed = true; // Enabled on every fresh visit.
+  if (reduceMotion.matches) motionAllowed = false;
   let inView = false;
+  let compact = false;
   const pause = document.querySelector("#motion");
   const tr = document.documentElement.lang === "tr";
   pause.hidden = false;
@@ -55,7 +57,7 @@ function initField(section) {
   function pressure(nx, ny, t) {
     let p = BASE;
     for (const c of centres) {
-      const cx = c.ax * aspect + Math.sin(t * c.fx + c.px) * 0.16;
+      const cx = c.ax * aspect + Math.sin(t * c.fx + c.px) * Math.min(0.16, aspect * 0.22);
       const cy = c.ay + Math.cos(t * c.fy + c.py) * 0.14;
       const dx = (nx - cx) / c.sx, dy = (ny - cy) / c.sy;
       p += c.amp * Math.exp(-(dx * dx + dy * dy));
@@ -64,7 +66,7 @@ function initField(section) {
     p += (noise(nx * 7.3 - t * 0.02, ny * 7.3 + t * 0.015) - 0.5) * 1.1;
     if (cursor.strength > 0.001) {
       const dx = (nx - cursor.x) / 0.17, dy = (ny - cursor.y) / 0.17;
-      p -= 9 * cursor.strength * Math.exp(-(dx * dx + dy * dy));
+      p -= (compact ? 12 : 9) * cursor.strength * Math.exp(-(dx * dx + dy * dy));
     }
     return p;
   }
@@ -74,6 +76,7 @@ function initField(section) {
     w = rect.width;
     h = rect.height;
     aspect = w / h;
+    compact = w <= 650;
     dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
@@ -209,8 +212,8 @@ function initField(section) {
     lastDraw = now;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    time += dt;
-    const k = 1 - Math.exp(-dt * 4.5);
+    time += dt * (compact ? 1.65 : 1);
+    const k = 1 - Math.exp(-dt * (compact ? 9 : 4.5));
     cursor.x += (cursor.tx - cursor.x) * k;
     cursor.y += (cursor.ty - cursor.y) * k;
     cursor.strength += (cursor.target - cursor.strength) * (1 - Math.exp(-dt * 3));
@@ -235,16 +238,25 @@ function initField(section) {
     cursor.target = 1;
   }
   section.addEventListener("pointermove", (event) => {
-    if (event.pointerType !== "touch") point(event);
+    point(event);
   });
   section.addEventListener("pointerleave", () => { cursor.target = 0; });
+  // Passive touch input keeps native vertical scrolling and pinch zoom intact.
+  // Touchmove continues the field response after the browser cancels pointermove for scrolling.
   let touchFade = 0;
-  section.addEventListener("pointerdown", (event) => {
-    if (event.pointerType !== "touch") return;
-    point(event);
+  function touchPoint(event) {
+    if (!event.touches.length) return;
+    point(event.touches[0]);
     clearTimeout(touchFade);
-    touchFade = setTimeout(() => { cursor.target = 0; }, 2400);
-  });
+  }
+  section.addEventListener("touchstart", touchPoint, { passive: true });
+  section.addEventListener("touchmove", touchPoint, { passive: true });
+  function releaseTouch() {
+    clearTimeout(touchFade);
+    touchFade = setTimeout(() => { cursor.target = 0; }, 900);
+  }
+  section.addEventListener("touchend", releaseTouch, { passive: true });
+  section.addEventListener("touchcancel", releaseTouch, { passive: true });
 
   // the field is only alive while it is on screen
   const observer = new IntersectionObserver((entries) => {
@@ -257,6 +269,12 @@ function initField(section) {
 
   function syncMotion() {
     stop();
+    section.dataset.motion = motionAllowed ? "enabled" : "paused";
+    if (!motionAllowed) {
+      clearTimeout(touchFade);
+      cursor.target = cursor.strength = 0;
+      draw(time);
+    }
     pause.setAttribute("aria-pressed", String(!motionAllowed));
     pause.textContent = motionAllowed ? (tr ? "Hareketi durdur" : "Pause motion") : (tr ? "Hareketi başlat" : "Start motion");
     start();
