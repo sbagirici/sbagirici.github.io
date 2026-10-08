@@ -56,7 +56,7 @@
 .health-dot.lost { background: transparent; border-color: #8c3e2f; position: relative; }
 .health-dot.lost::after { content: ''; position: absolute; left: 1px; top: 6px; width: 11px; height: 1px; background: #8c3e2f; transform: rotate(-45deg); }
 .article .redundancy-health > p { margin: 16px 0 0; font-size: 14px; color: #595d55; }
-@media (max-width: 1000px) { .substation-plate { margin-left: 0; margin-right: 0; } }
+@media (max-width: 1320px) { .substation-plate { margin-left: 0; margin-right: 0; } }
 @media (max-width: 700px) {
   .atlas-grid { grid-template-columns: 1fr; gap: 24px; }
   .atlas-study:nth-child(even) { padding-left: 0; border-left: 0; }
@@ -65,8 +65,8 @@
   .scene-heading { align-items: flex-start; gap: 12px; }
   .scene-state { font-size: 10px; text-align: right; max-width: 60%; }
   .protocol-scene > figcaption { font-size: 20px; }
-  .substation-plate { margin: 28px calc(-1 * var(--gutter)) 32px; }
-  .substation-plate figcaption { padding-left: var(--gutter); padding-right: var(--gutter); flex-direction: column; gap: 5px; }
+  .substation-plate { margin: 28px 0 32px; }
+  .substation-plate figcaption { padding-left: 0; padding-right: 0; flex-direction: column; gap: 5px; }
   .health-comparison { grid-template-columns: 1fr; gap: 24px; }
   .scene-controls button { font-size: 11px; padding: 12px; }
   .redbox-study svg { font-size: 26px; }
