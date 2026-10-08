@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="342" viewBox="0 0 900 342" role="img" aria-labelledby="dcp-result-title dcp-result-desc" font-family="Segoe UI, Segoe UI, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="342" viewBox="0 0 900 342" role="img" aria-labelledby="dcp-result-title dcp-result-desc" font-family="DejaVu Sans, Segoe UI, sans-serif">
 <title id="dcp-result-title">Aynı DCP yanıt başlığı, iki farklı işlem sonucu</title>
 <desc id="dcp-result-desc">TShark 4.2.2 ile çevrimdışı çözümlenen iki sentetik yanıtın başlığında Response Success görülür. İlk yanıttaki BlockError, In operation, SET not possible: işlem reddedilmiştir. İkinci yanıttaki BlockError Ok: ilgili işlem için olumlu yanıt vardır, sonraki cihaz durumu ayrıca doğrulanmalıdır. Bu kontrol cihazla iletişim veya saha deneyi değildir.</desc>
 <rect width="900" height="342" rx="8" fill="#f8fafc"/>

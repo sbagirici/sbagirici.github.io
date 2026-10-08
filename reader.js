@@ -2,16 +2,16 @@
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(!reduced)document.body.classList.add('is-motion-enabled');
  const motion=document.querySelector('#motion');
- motion.textContent=reduced?'Hareketi aç':'Hareketi durdur';
+ motion.textContent=reduced?'Hareketi aÃ§':(document.documentElement.lang==='en'?'Pause motion':'Hareketi durdur');
  motion.setAttribute('aria-pressed',String(!reduced));
- motion.addEventListener('click',()=>{const enabled=document.body.classList.toggle('is-motion-enabled');motion.textContent=enabled?'Hareketi durdur':'Hareketi aç';motion.setAttribute('aria-pressed',String(enabled));dispatchEvent(new Event('reader-motion'));});
+ motion.addEventListener('click',()=>{const enabled=document.body.classList.toggle('is-motion-enabled');motion.textContent=enabled?(document.documentElement.lang==='en'?'Pause motion':'Hareketi durdur'):'Hareketi aÃ§';motion.setAttribute('aria-pressed',String(enabled));dispatchEvent(new Event('reader-motion'));});
  const figures=[...document.querySelectorAll('.interactive-study')];
  document.querySelectorAll('.response-demo').forEach(f=>{
    f.querySelector('.response-actions').hidden=false;
    f.querySelectorAll('[data-result]').forEach(b=>b.addEventListener('click',()=>{
      const accepted=b.dataset.result==='accept';
      f.querySelector('.block-result').textContent=accepted?'Ok':'In operation, SET not possible';
-     f.querySelector('.response-status').textContent=accepted?'İlgili işlem için olumlu blok yanıtı var. Cihazın sonraki ad bildirimi ayrıca doğrulanmalı.':'Bu örnekte ilgili yazma reddedilmiş.';
+     f.querySelector('.response-status').textContent=accepted?'Ä°lgili iÅŸlem iÃ§in olumlu blok yanÄ±tÄ± var. CihazÄ±n sonraki ad bildirimi ayrÄ±ca doÄŸrulanmalÄ±.':'Bu Ã¶rnekte ilgili yazma reddedilmiÅŸ.';
      f.querySelectorAll('[data-result]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
    }));
  });

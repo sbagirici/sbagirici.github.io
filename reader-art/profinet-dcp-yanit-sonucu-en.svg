@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="342" viewBox="0 0 900 342" role="img" aria-labelledby="dcp-result-title dcp-result-desc" font-family="DejaVu Sans, Segoe UI, sans-serif">
+<title id="dcp-result-title">One DCP response header, two operation results</title>
+<desc id="dcp-result-desc">Two synthetic responses decoded offline with TShark 4.2.2 both report Response Success. The first BlockError says In operation, SET not possible and rejects the write. The second is Ok, a positive operation response; the subsequent device value still needs verification. This is not a device interaction or field experiment.</desc>
+<rect width="900" height="342" rx="8" fill="#f8fafc" />
+<g stroke-linecap="round" stroke-linejoin="round" fill="none">
+<text x="30" y="42" fill="#213547" stroke="none" font-size="25" font-weight="600">Same header. Different operation results.</text>
+<path d="M32 68 Q225 67 425 69 L425 287 Q225 289 32 287 Z" stroke="#7d8994" stroke-width="1.6" />
+<path d="M473 68 Q668 67 870 69 L869 287 Q667 289 474 287 Z" stroke="#7d8994" stroke-width="1.6" />
+<path d="M33 159 L424 160 M475 160 L869 159" stroke="#7d8994" stroke-width="1.2" />
+<text x="51" y="105" fill="#7d8994" stroke="none" font-size="18">ServiceType</text>
+<text x="51" y="138" fill="#213547" stroke="none" font-size="23" font-weight="600">Response Success</text>
+<text x="493" y="105" fill="#7d8994" stroke="none" font-size="18">ServiceType</text>
+<text x="493" y="138" fill="#213547" stroke="none" font-size="23" font-weight="600">Response Success</text>
+<text x="51" y="195" fill="#7d8994" stroke="none" font-size="18">BlockError</text>
+<text x="51" y="225" fill="#d55b30" stroke="none" font-size="18">In operation, SET not possible</text>
+<text x="51" y="263" fill="#d55b30" stroke="none" font-size="22" font-weight="600">Operation rejected.</text>
+<text x="493" y="195" fill="#7d8994" stroke="none" font-size="18">BlockError</text>
+<text x="493" y="225" fill="#213547" stroke="none" font-size="23">Ok</text>
+<text x="493" y="263" fill="#213547" stroke="none" font-size="21" font-weight="600">Positive operation response.</text>
+<text x="32" y="324" fill="#7760ad" stroke="none" font-size="20">After a positive response, verify the value reported by the device.</text>
+</g></svg>

@@ -1,461 +1,77 @@
-<!doctype html><html lang='en'><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><link rel=canonical href='https://selmanbagirici.com/en/ring-topologies/'><title>&quot;What Happens When the Network Breaks? RSTP, MRP, HSR, and PRP&quot;</title><style>
-:root {
-  color-scheme: light;
-  --paper: #f3eee4;
-  --paper-deep: #e9e1d3;
-  --ink: #20251f;
-  --muted: #686961;
-  --rule: #bdb4a5;
-  --spot: #a4462a;
-  --teal: #176b66;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 17px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  min-height: 100vh;
-}
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .16;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
-}
-header, main, footer { width: min(1180px, calc(100% - 48px)); margin: auto; }
-.draft-banner {
-  position: relative;
-  z-index: 1;
-  padding: 7px 16px;
-  background: #e9b949;
-  color: #2a2418;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-.site-header {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 30px 0 18px;
-  border-bottom: 1px solid var(--ink);
-}
-.brand {
-  color: var(--ink);
-  font: 700 23px/1 Georgia, "Times New Roman", serif;
-  letter-spacing: -.02em;
-  text-decoration: none;
-}
-.brand span { color: inherit; }
-.brand-lockup {
-  display: flex;
-  align-items: baseline;
-  min-width: 0;
-  gap: 14px;
-}
-.brand-tagline {
-  color: var(--muted);
-  font-size: 11px;
-  letter-spacing: .015em;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-nav { display: flex; flex-wrap: wrap; gap: 22px; }
-nav a {
-  padding: 0 0 2px;
-  border-bottom: 1px solid transparent;
-  color: var(--ink);
-  font-size: 14px;
-  text-decoration: none;
-}
-nav a:hover { border-color: var(--spot); color: var(--spot); }
-nav .language { color: var(--spot); font-weight: 800; }
-a { color: var(--teal); }
-.eyebrow {
-  color: var(--spot);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-}
-h1, h2, h3 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 500;
-  letter-spacing: -.025em;
-}
-h1 { margin: .15em 0 .35em; font-size: clamp(46px, 7.2vw, 88px); line-height: .98; }
-h2 { margin-top: 1.8em; line-height: 1.08; }
-h3 { line-height: 1.2; }
-.lead {
-  max-width: 720px;
-  color: var(--muted);
-  font: clamp(19px, 2.2vw, 24px)/1.48 Georgia, "Times New Roman", serif;
-}
-.hero { max-width: 980px; padding: 54px 0 24px; }
-.hero-home { padding: clamp(80px, 11vw, 150px) 0 clamp(76px, 10vw, 125px); }
-.hero-home .lead { max-width: 650px; }
-.feature {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(290px, .7fr);
-  margin: 0 0 100px;
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-}
-.feature-copy { padding: 44px 48px 48px 0; }
-.feature h2 { max-width: 790px; margin: .34em 0 .4em; font-size: clamp(38px, 5vw, 64px); }
-.feature-copy > p { max-width: 680px; font-family: Georgia, "Times New Roman", serif; font-size: 19px; }
-.feature-art {
-  display: flex;
-  align-items: center;
-  min-height: 430px;
-  padding: 38px;
-  border-left: 1px solid var(--ink);
-  background: var(--paper-deep);
-}
-.mini-flow { width: 100%; }
-.mini-node { padding: 16px 0; border-top: 1px solid var(--rule); }
-.mini-node:last-child { border-bottom: 1px solid var(--rule); }
-.mini-node strong { font: 500 23px/1.2 Georgia, "Times New Roman", serif; }
-.mini-arrow { color: var(--spot); font-size: 21px; line-height: 1; text-align: right; }
-.meta { color: var(--muted); font-size: 13px; }
-.article-meta { display: flex; flex-wrap: wrap; gap: 16px; margin: 0 0 28px; }
-.article-meta span {
-  padding: 0;
-  border: 0;
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-}
-.button {
-  display: inline-block;
-  margin-top: 14px;
-  padding: 6px 0 3px;
-  border: 0;
-  border-bottom: 1px solid currentColor;
-  color: var(--spot);
-  font-weight: 750;
-  text-decoration: none;
-}
-.about {
-  max-width: 880px;
-  margin: 0 0 90px;
-  padding: 52px 0 62px;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-.about h2 { margin: .5em 0; font-size: 38px; }
-.about p { max-width: 680px; color: var(--muted); font: 19px/1.55 Georgia, "Times New Roman", serif; }
-.article {
-  max-width: 980px;
-  margin: 0 0 56px;
-  padding: 34px 0 64px;
-  border: 0;
-  border-bottom: 1px solid var(--ink);
-  background: transparent;
-  box-shadow: none;
-}
-.article > h1:first-of-type { max-width: 920px; font-size: clamp(45px, 6.5vw, 78px); }
-.article h2 { margin-top: 2.25em; font-size: clamp(28px, 3.5vw, 40px); }
-.article p, .article li {
-  max-width: 72ch;
-  color: var(--ink);
-  font: 18.5px/1.62 Georgia, "Times New Roman", serif;
-}
-.article li { margin: .4em 0; }
-.article img {
-  display: block;
-  width: 100%;
-  height: auto;
-  margin: 44px 0;
-  border: 1px solid var(--rule);
-  border-radius: 2px;
-}
-.article blockquote {
-  max-width: 72ch;
-  margin: 30px 0;
-  padding: 12px 24px;
-  border-left: 3px solid var(--spot);
-  background: #ebe4d8;
-}
-.article code { padding: .12em .35em; background: #e4dbcd; border-radius: 2px; font-size: .88em; }
-.article pre { overflow: auto; padding: 18px; background: #e4dbcd; }
-.table-wrap { overflow: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 15px; }
-th, td { padding: 10px; border: 1px solid var(--rule); text-align: left; }
-th { background: var(--paper-deep); }
-.downloads { max-width: 980px; margin: 0 0 90px; padding: 40px 0; border: 0; border-bottom: 1px solid var(--ink); background: transparent; }
-.downloads h2 { margin: 0 0 8px; font-size: 38px; }
-.download-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 28px; margin-top: 28px; }
-.download-item { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 18px 0; border: 0; border-top: 1px solid var(--rule); background: transparent; }
-.download-item strong { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 18px; font-weight: 500; }
-.download-item .button { margin: 0; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 28px; padding-bottom: 70px; }
-.card { padding: 28px 0; border: 0; border-top: 1px solid var(--rule); background: transparent; box-shadow: none; }
-.card h2 { margin: .3em 0; font-size: 25px; }
-.card-art {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  margin: 0 0 22px;
-  border: 1px solid var(--rule);
-  background: #0b2230;
-  object-fit: cover;
-}
-.writing-list > h2 { margin: 0 0 28px; font-size: clamp(32px, 4vw, 48px); }
-.preview-drafts { margin: 20px 0 90px; padding: 36px 0 8px; border-top: 1px solid var(--ink); }
-.preview-drafts h2 { margin: .35em 0 24px; font-size: clamp(28px, 3.5vw, 42px); }
-.draft-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
-.draft-link { padding: 19px 0 22px; border-top: 1px solid var(--rule); }
-.draft-link h3 { margin: 7px 0 0; font-size: 20px; }
-.draft-link a { color: var(--ink); text-decoration: none; }
-.draft-link a:hover { color: var(--spot); }
-.actions { display: flex; gap: 18px; }
-.approval-box {
-  max-width: 980px;
-  margin: -28px 0 64px;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--ink);
-}
-.approval-box p { max-width: 72ch; color: var(--muted); }
-.approval-box form { margin-top: 18px; }
-.approval-button {
-  padding: 11px 16px;
-  border: 1px solid var(--spot);
-  border-radius: 2px;
-  background: var(--spot);
-  color: #fff;
-  font: inherit;
-  font-weight: 750;
-  cursor: pointer;
-}
-.approval-button:hover { filter: brightness(.92); }
-.approval-recorded { color: var(--teal); font-weight: 750; }
-.viewer { text-align: center; }
-.viewer img { max-width: 100%; height: auto; border: 1px solid var(--rule); background: white; }
-footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--muted); font-size: 12px; }
-.footer-row { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
-.footer-row p { margin: 0; }
-.social-links { display: flex; flex-wrap: wrap; gap: 18px; }
-.social-links a { color: var(--muted); font-size: 12px; text-decoration: none; }
-.social-links a:hover { color: var(--spot); }
-@media (max-width: 760px) {
-  header, main, footer { width: min(100% - 28px, 1180px); }
-  .site-header { align-items: flex-start; flex-direction: column; }
-  .brand-lockup { align-items: flex-start; }
-  .brand-tagline { max-width: 28ch; white-space: normal; }
-  nav { gap: 16px; }
-  .hero-home { padding: 72px 0; }
-  .feature { grid-template-columns: 1fr; }
-  .feature-copy { padding: 34px 0 38px; }
-  .feature-art { min-height: auto; padding: 30px 0; border-top: 1px solid var(--ink); border-left: 0; background: transparent; }
-  .download-grid { grid-template-columns: 1fr; }
-  .draft-list { grid-template-columns: 1fr; }
-  .article { padding-top: 16px; }
-  .footer-row { align-items: flex-start; flex-direction: column; }
-}
-
-.site-header .brand {
-  color: var(--spot);
-  font-size: 27px;
-  font-weight: 800;
-  letter-spacing: -.06em;
-}
-.hero-home {
-  max-width: none;
-  padding: clamp(48px, 7vw, 82px) 0 clamp(42px, 6vw, 70px);
-  border-bottom: 1px solid var(--ink);
-}
-.home-prompt {
-  max-width: 720px;
-  margin: 0;
-  color: var(--muted);
-  font: clamp(20px, 2.2vw, 27px)/1.55 Georgia, "Times New Roman", serif;
-}
-.home-prompt strong {
-  color: var(--ink);
-  font-weight: 700;
-}
-.home-note {
-  padding: 5px 0 5px 26px;
-  border-left: 1px solid var(--rule);
-}
-.home-note .meta {
-  display: block;
-  margin-bottom: 12px;
-  color: var(--spot);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-.home-note p {
-  margin: 0;
-  color: var(--muted);
-  font: 16px/1.55 Georgia, "Times New Roman", serif;
-}
-.feature { grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr); margin-bottom: 72px; }
-.feature-art {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 0;
-  padding: 28px;
-  background: #0b2230;
-}
-.feature-art img {
-  display: block;
-  width: 100%;
-  height: auto;
-  min-height: 0;
-  object-fit: contain;
-}
-.feature-art figcaption {
-  margin-top: 14px;
-  color: #d7e4ea;
-  font-size: 11px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-.about { margin-bottom: 58px; padding: 40px 0 48px; }
-@media (max-width: 760px) {
-  .hero-home { padding: 48px 0 44px; }
-  .home-note { max-width: 32ch; padding: 18px 0 0; border-top: 1px solid var(--rule); border-left: 0; }
-  .feature { grid-template-columns: 1fr; }
-  .feature-art { padding: 18px 14px 22px; background: #0b2230; }
-  .feature-art img { min-height: 0; }
-  .feature-art figcaption { padding: 0 16px; }
-}
-.about {
-  display: grid;
-  grid-template-columns: minmax(230px, .58fr) minmax(0, 1.42fr);
-  gap: clamp(34px, 7vw, 92px);
-  align-items: center;
-  max-width: none;
-}
-.about-portrait {
-  display: block;
-  width: 100%;
-  max-width: 390px;
-  aspect-ratio: 4 / 5;
-  border: 1px solid var(--rule);
-  object-fit: cover;
-  object-position: center 28%;
-  filter: contrast(1.02);
-}
-.about-copy { max-width: 720px; }
-.about-copy h2 { font-size: clamp(36px, 5vw, 58px); }
-.about-copy p { max-width: 680px; }
-.about-page-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
-  gap: clamp(42px, 8vw, 108px);
-  align-items: end;
-  padding: clamp(58px, 8vw, 105px) 0 72px;
-  border-bottom: 1px solid var(--ink);
-}
-.about-page-hero h1 { max-width: 720px; }
-.about-page-hero .lead { max-width: 700px; }
-.about-page-hero .about-portrait { justify-self: end; }
-.about-sections { max-width: 900px; margin: 0 auto; padding: 30px 0 92px; }
-.about-section { padding: 34px 0 42px; border-bottom: 1px solid var(--rule); }
-.about-section h2 { margin: 0 0 22px; font-size: clamp(30px, 4vw, 43px); }
-.about-section p { max-width: 72ch; font: 18.5px/1.68 Georgia, "Times New Roman", serif; }
-.curiosity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 24px; }
-.curiosity-card { min-height: 170px; padding: 20px 0 24px; border-top: 1px solid var(--ink); }
-.curiosity-card .curiosity-index { color: var(--spot); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
-.curiosity-card h3 { margin: 22px 0 10px; font-size: 23px; }
-.curiosity-card p { margin: 0; color: var(--muted); font: 15px/1.55 ui-sans-serif, system-ui, sans-serif; }
-.about-quote { margin: 30px 0 0; padding: 26px 0 4px 28px; border-left: 3px solid var(--spot); color: var(--spot); font: clamp(25px, 3.5vw, 37px)/1.22 Georgia, "Times New Roman", serif; }
-.editorial-note { max-width: 72ch; margin-top: 30px; padding: 20px 24px; border: 1px solid var(--rule); background: var(--paper-deep); }
-.editorial-note p { margin: 0; color: var(--muted); font: 14px/1.58 ui-sans-serif, system-ui, sans-serif; }
-.about-disclaimer { margin-top: 48px; padding: 26px 0; border-top: 1px solid var(--ink); }
-.about-disclaimer p { color: var(--muted); font-size: 13px; }
-.profile-links { display: flex; flex-wrap: wrap; gap: 22px; margin: 38px 0 0; }
-.profile-links a { color: var(--ink); font-weight: 750; text-decoration: none; border-bottom: 1px solid var(--spot); }
-.contact-page {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(250px, .55fr);
-  gap: clamp(46px, 8vw, 110px);
-  padding: clamp(58px, 8vw, 100px) 0 96px;
-}
-.contact-copy h1 { margin-top: .25em; font-size: clamp(48px, 6.5vw, 78px); }
-.contact-copy .lead { max-width: 660px; }
-.contact-form { max-width: 700px; margin-top: 42px; }
-.form-field { margin: 0 0 24px; }
-.form-field label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 800; }
-.form-field input, .form-field textarea {
-  width: 100%;
-  padding: 12px 13px;
-  border: 1px solid var(--rule);
-  border-radius: 2px;
-  background: #faf7f0;
-  color: var(--ink);
-  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-.form-field textarea { min-height: 180px; resize: vertical; }
-.form-field input:focus, .form-field textarea:focus { outline: 2px solid var(--spot); outline-offset: 2px; }
-.form-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
-.form-note { max-width: 64ch; color: var(--muted); font-size: 12px; }
-.contact-submit { margin-top: 22px; padding: 11px 17px; border: 1px solid var(--spot); border-radius: 2px; background: var(--spot); color: white; font: inherit; font-weight: 800; cursor: pointer; }
-.contact-submit:disabled { cursor: not-allowed; opacity: .52; }
-.contact-aside { padding: 24px 0 0 28px; border-left: 1px solid var(--rule); }
-.contact-aside h2 { margin: .35em 0 .65em; font-size: 29px; }
-.contact-aside p { color: var(--muted); }
-.contact-result { max-width: 760px; padding: clamp(76px, 12vw, 160px) 0; }
-.contact-result h1 { font-size: clamp(46px, 7vw, 82px); }
-@media (max-width: 760px) {
-  .about, .about-page-hero { grid-template-columns: 1fr; }
-  .about-portrait { max-width: 100%; }
-  .about-page-hero .about-portrait { grid-row: 1; justify-self: stretch; max-height: 520px; }
-  .curiosity-grid { grid-template-columns: 1fr 1fr; }
-  .contact-page { grid-template-columns: 1fr; gap: 34px; padding-top: 46px; }
-  .contact-aside { padding: 24px 0 0; border-top: 1px solid var(--rule); border-left: 0; }
-}
-@media (max-width: 480px) { .curiosity-grid { grid-template-columns: 1fr; } }
-</style><body><header class=site-header><div class=brand-lockup><a class=brand href='/' aria-label='Selman Bağırıcı'>SB<span>.</span></a><span class=brand-tagline>A personal space for my work, ideas, and things I find worth keeping.</span></div><nav><a href='/'>Home</a><a href='/#writing'>Writing</a><a href='/about/'>About</a><a class=language href='/ring-topolojiler/' lang='tr'>TR</a></nav></header><main><section class=hero><div class=eyebrow>Work &amp; Research · OT Security</div><p><a href='/ring-topolojiler/'>Türkçe oku →</a></p></section><article class=article><div class=article-meta><span>Article: OTB-2026-005</span><span>Version 0.3</span><span>10 min read</span><span>Published</span></div><h1>What Happens When the Network Breaks? RSTP, MRP, HSR, and PRP</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>What Happens When the Network Breaks? RSTP, MRP, HSR, and PRP</title><link rel="canonical" href="https://selmanbagirici.com/en/ring-topologies/"><link rel="stylesheet" href="/reader.css?v=20261008-notebook-03-02-02"><link rel="stylesheet" href="/protocol-scenes.css?v=20261008-notebook-03-02"></head><body class="reader" id="top"><a class="skip" href="#text">Skip to text</a><header><a class="brand" href="/">Selman Bağırıcı</a><nav aria-label="Main navigation"><a href="/en/notes/">My Notes</a><a href="/en/experiences/">My Experiences</a><a href="/about/">About me</a><a class="language-switch" href="/ring-topolojiler/" lang="tr">TR</a><button type="button" id="motion">Pause motion</button></nav></header><main><div class="reader-cover"><div class="cover-copy"><h1>What Happens When the Network Breaks? RSTP, MRP, HSR, and PRP</h1><a href="#text">Start reading ↓</a></div><img class="cover-art" src="/reader-art/network-study.png" alt="Engineering study related to this note"></div><div class="reader-layout"><aside><details><summary>In this note</summary><nav><a href="#section-1">Keep this distinction in mind</a><a href="#section-2">RSTP: holding some paths in reserve to keep the network usable</a><a href="#section-3">MRP: controlled recovery for an industrial ring</a><a href="#section-4">HSR: using both directions from the start</a><a href="#section-5">PRP: entrusting the same message to two separate networks</a><a href="#section-6">Putting all four side by side</a><a href="#section-7">Why does this matter in a substation?</a><a href="#section-8">Where do SAN, DAN, and RedBox come from?</a><a href="#section-9">“Seamless” does not mean forgetting the failure</a><a href="#section-10">Redundancy does not provide cybersecurity</a><a href="#section-11">Conclusion</a><a href="#section-12">Evidence boundary</a><a href="#section-13">Sources</a></nav></details></aside><article class="article" id="text">
 <p>An Ethernet cable has been cut. What happens now?</p>
 <p>In an office network, the answer may often be, “there will be a brief interruption, and the network will find a new path.” But if the same network carries protection or control information in a substation, even the loss of a few packets may need separate consideration. This is where four abbreviations enter the picture: RSTP, MRP, HSR, and PRP.</p>
 <p>Their names may look similar, but they do not solve the problem in the same way. RSTP and MRP rearrange the communication path after detecting a failure. HSR and PRP rely on sending a backup copy before the failure occurs.</p>
-<p>The main subject of this article is not the substation itself. It is <strong>continuous-communication design</strong>*. A substation is simply a useful example because it lets us see the physical significance of the difference.</p>
-<h2>Keep this distinction in mind</h2>
+<p>The main subject of this article is not the substation itself. It is <strong>continuous-communication design</strong>. A substation is simply a useful example because it lets us see the physical significance of the difference.</p>
+<h2 id="section-1">Keep this distinction in mind</h2>
 <p>The four mechanisms can be remembered in one short list:</p>
 <ul>
-<li><strong>RSTP:</strong>* Builds a loop-free active path and reconverges the network by changing port roles after a failure.</li>
-<li><strong>MRP:</strong>* Manages an industrial Ethernet ring and rearranges the ring over the alternative path after a failure.</li>
-<li><strong>HSR:</strong>* In the common ring model, sends the same frame in both directions.</li>
-<li><strong>PRP:</strong>* Sends the same frame over two separate Ethernet networks.</li>
+<li><strong>RSTP:</strong> Builds a loop-free active path and reconverges the network by changing port roles after a failure.</li>
+<li><strong>MRP:</strong> Manages an industrial Ethernet ring and rearranges the ring over the alternative path after a failure.</li>
+<li><strong>HSR:</strong> In the common ring model, sends the same frame in both directions.</li>
+<li><strong>PRP:</strong> Sends the same frame over two separate Ethernet networks.</li>
 </ul>
-<p>For the first two, the key word is <strong>recovery</strong>*. For the other two, the second copy is already in transit.</p>
-<p><img src="/raw/assets/hsr-prp-mrp-topology-en.svg?v=0137857e77e7" alt="Diagram comparing how RSTP, MRP, HSR, and PRP behave when a failure occurs"></p>
-<h2>RSTP: holding some paths in reserve to keep the network usable</h2>
+<p>For the first two, the key word is <strong>recovery</strong>. For the other two, the second copy is already in transit.</p>
+<figure class="protocol-atlas"><figcaption><span class="plate-id">LEVHA 01 / PLATE 01</span><span class="atlas-title">One break. Four different responses.</span></figcaption><div class="atlas-grid"><div class="atlas-study" data-protocol="RSTP"><span class="plate-id">01 / RSTP</span><svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="RSTP · conceptual topology"><defs><pattern id="atlas-RSTP-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="atlas-RSTP-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#atlas-RSTP-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><path class="physical-path" d="M300 72L465 170L402 315L198 315L135 170Z"/><path class="route route-a" d="M300 72L465 170L402 315"/><path class="route route-b" d="M300 72L135 170L198 315L402 315" stroke="#a27838"/><path class="blocked-link" d="M300 72L135 170"/><text x="123" y="105" class="blocked-label">Standby path</text><g class="fault-mark"><path d="M429 224L441 255"/><path d="M428 234L443 248M443 234L428 248"/></g><path class="packet-path path-a" d="M300 72L465 170L402 315"/><path class="packet-path path-b" d="M300 72L135 170L198 315L402 315"/><use href="#atlas-RSTP-device" x="300" y="72"/><use href="#atlas-RSTP-device" x="465" y="170"/><use href="#atlas-RSTP-device" x="402" y="315"/><use href="#atlas-RSTP-device" x="198" y="315"/><use href="#atlas-RSTP-device" x="135" y="170"/><text x="332" y="56" class="node-label">S</text><text x="429" y="341" class="node-label">D</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg><p>A standby path opens after failure.</p></div><div class="atlas-study" data-protocol="MRP"><span class="plate-id">02 / MRP</span><svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="MRP · conceptual topology"><defs><pattern id="atlas-MRP-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="atlas-MRP-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#atlas-MRP-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><path class="physical-path" d="M300 72L465 170L402 315L198 315L135 170Z"/><path class="route route-a" d="M300 72L465 170L402 315"/><path class="route route-b" d="M300 72L135 170L198 315L402 315" stroke="#a27838"/><path class="blocked-link" d="M300 72L135 170"/><text x="123" y="105" class="blocked-label">Standby path</text><g class="fault-mark"><path d="M429 224L441 255"/><path d="M428 234L443 248M443 234L428 248"/></g><path class="packet-path path-a" d="M300 72L465 170L402 315"/><path class="packet-path path-b" d="M300 72L135 170L198 315L402 315"/><use href="#atlas-MRP-device" x="300" y="72"/><use href="#atlas-MRP-device" x="465" y="170"/><use href="#atlas-MRP-device" x="402" y="315"/><use href="#atlas-MRP-device" x="198" y="315"/><use href="#atlas-MRP-device" x="135" y="170"/><text x="332" y="56" class="node-label">MRM</text><text x="429" y="341" class="node-label">D</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg><p>The managed ring is rearranged after failure.</p></div><div class="atlas-study" data-protocol="HSR"><span class="plate-id">03 / HSR</span><svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="HSR · conceptual topology"><defs><pattern id="atlas-HSR-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="atlas-HSR-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#atlas-HSR-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><path class="physical-path" d="M300 72L465 170L402 315L198 315L135 170Z"/><path class="route route-a" d="M300 72L465 170L402 315"/><path class="route route-b" d="M300 72L135 170L198 315L402 315" stroke="#a27838"/><g class="fault-mark"><path d="M429 224L441 255"/><path d="M428 234L443 248M443 234L428 248"/></g><path class="packet-path path-a" d="M300 72L465 170L402 315"/><path class="packet-path path-b" d="M300 72L135 170L198 315L402 315"/><use href="#atlas-HSR-device" x="300" y="72"/><use href="#atlas-HSR-device" x="465" y="170"/><use href="#atlas-HSR-device" x="402" y="315"/><use href="#atlas-HSR-device" x="198" y="315"/><use href="#atlas-HSR-device" x="135" y="170"/><text x="332" y="56" class="node-label">DANH</text><text x="429" y="341" class="node-label">DANH</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg><p>The frame is sent in both ring directions in advance.</p></div><div class="atlas-study" data-protocol="PRP"><span class="plate-id">04 / PRP</span><svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="PRP · conceptual topology"><defs><pattern id="atlas-PRP-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="atlas-PRP-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#atlas-PRP-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><g class="physical-path"><path d="M300 62L148 160L300 318"/><path d="M300 62L452 160L480 230L300 318"/></g><g class="network-domain"><ellipse cx="148" cy="166" rx="98" ry="74"/><ellipse cx="452" cy="166" rx="98" ry="74"/></g>
+        <text x="148" y="275" class="domain-label">LAN A</text><text x="452" y="275" class="domain-label">LAN B</text>
+        <path class="route route-a" d="M300 62L148 160L300 318"/><path class="route route-b" d="M300 62L452 160L480 230L300 318" stroke="#a27838"/>
+        <g class="fault-mark"><path d="M202 233L234 273"/><path d="M213 238L226 253M226 238L213 253"/></g>
+        <path class="packet-path path-a" d="M300 62L148 160L300 318"/><path class="packet-path path-b" d="M300 62L452 160L480 230L300 318"/>
+        <use href="#atlas-PRP-device" x="300" y="62"/><use href="#atlas-PRP-device" x="148" y="160"/><use href="#atlas-PRP-device" x="452" y="160"/><use href="#atlas-PRP-device" x="300" y="318"/>
+        <text x="328" y="53" class="node-label">DANP</text><text x="328" y="338" class="node-label">DANP</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg><p>The frame is sent over two separate LANs in advance.</p></div></div><p class="study-note">Conceptual comparison · No measured recovery time is shown.</p><a class="plate-download" href="/article-art/protocols-en.svg" download>Download plate · SVG ↗</a></figure>
+<h2 id="section-2">RSTP: holding some paths in reserve to keep the network usable</h2><figure class="protocol-scene" data-protocol="RSTP" data-state="healthy">
+    <div class="scene-heading"><span class="plate-id">02 / RSTP</span><span class="scene-state">Initial state</span></div>
+    <svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="RSTP · conceptual topology"><defs><pattern id="scene-RSTP-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="scene-RSTP-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#scene-RSTP-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><path class="physical-path" d="M300 72L465 170L402 315L198 315L135 170Z"/><path class="route route-a" d="M300 72L465 170L402 315"/><path class="route route-b" d="M300 72L135 170L198 315L402 315" stroke="#a27838"/><path class="blocked-link" d="M300 72L135 170"/><text x="123" y="105" class="blocked-label">Standby path</text><g class="fault-mark"><path d="M429 224L441 255"/><path d="M428 234L443 248M443 234L428 248"/></g><path class="packet-path path-a" d="M300 72L465 170L402 315"/><path class="packet-path path-b" d="M300 72L135 170L198 315L402 315"/><use href="#scene-RSTP-device" x="300" y="72"/><use href="#scene-RSTP-device" x="465" y="170"/><use href="#scene-RSTP-device" x="402" y="315"/><use href="#scene-RSTP-device" x="198" y="315"/><use href="#scene-RSTP-device" x="135" y="170"/><text x="332" y="56" class="node-label">S</text><text x="429" y="341" class="node-label">D</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg>
+    <figcaption>A standby path opens after failure.</figcaption><span class="delivery-state"></span>
+    <div class="scene-controls" hidden><button type="button" class="fault-toggle">Break the link</button><button type="button" class="flow-toggle" aria-pressed="false">Play the flow</button><button type="button" class="scene-auto">Follow scrolling</button></div>
+    <p class="study-note">Illustrative model · Animation timing is not network latency.</p></figure>
 <p>If Ethernet switches are connected in arbitrary loops, frames can circulate and multiply inside the network. Rapid Spanning Tree Protocol creates a loop-free active topology in a bridged network. Some ports forward traffic, while others that could provide an alternative path remain in a non-forwarding role.</p>
 <p>Think of the corridors in a building. If every door is left open at the same time, people may walk around in circles. RSTP decides which doors are used. If an active corridor closes, the role of a waiting path changes and the network is rearranged.</p>
-<p>The important point is that RSTP is designed for rapid reconfiguration, but it is still a <strong>post-failure reconfiguration</strong>* approach. The actual interruption depends on the topology, how the link failure is detected, port and bridge roles, configuration, and interoperability with legacy STP devices. The mere presence of RSTP therefore does not guarantee a particular recovery time.</p>
+<p>The important point is that RSTP is designed for rapid reconfiguration, but it is still a <strong>post-failure reconfiguration</strong> approach. The actual interruption depends on the topology, how the link failure is detected, port and bridge roles, configuration, and interoperability with legacy STP devices. The mere presence of RSTP therefore does not guarantee a particular recovery time.</p>
 <p>RSTP is intended for general-purpose bridged networks. It is not limited to rings; it can create a loop-free active structure across different physical topologies.</p>
-<h2>MRP: controlled recovery for an industrial ring</h2>
+<h2 id="section-3">MRP: controlled recovery for an industrial ring</h2><figure class="protocol-scene" data-protocol="MRP" data-state="healthy">
+    <div class="scene-heading"><span class="plate-id">03 / MRP</span><span class="scene-state">Initial state</span></div>
+    <svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="MRP · conceptual topology"><defs><pattern id="scene-MRP-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="scene-MRP-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#scene-MRP-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><path class="physical-path" d="M300 72L465 170L402 315L198 315L135 170Z"/><path class="route route-a" d="M300 72L465 170L402 315"/><path class="route route-b" d="M300 72L135 170L198 315L402 315" stroke="#a27838"/><path class="blocked-link" d="M300 72L135 170"/><text x="123" y="105" class="blocked-label">Standby path</text><g class="fault-mark"><path d="M429 224L441 255"/><path d="M428 234L443 248M443 234L428 248"/></g><path class="packet-path path-a" d="M300 72L465 170L402 315"/><path class="packet-path path-b" d="M300 72L135 170L198 315L402 315"/><use href="#scene-MRP-device" x="300" y="72"/><use href="#scene-MRP-device" x="465" y="170"/><use href="#scene-MRP-device" x="402" y="315"/><use href="#scene-MRP-device" x="198" y="315"/><use href="#scene-MRP-device" x="135" y="170"/><text x="332" y="56" class="node-label">MRM</text><text x="429" y="341" class="node-label">D</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg>
+    <figcaption>The managed ring is rearranged after failure.</figcaption><span class="delivery-state"></span>
+    <div class="scene-controls" hidden><button type="button" class="fault-toggle">Break the link</button><button type="button" class="flow-toggle" aria-pressed="false">Play the flow</button><button type="button" class="scene-auto">Follow scrolling</button></div>
+    <p class="study-note">Illustrative model · Animation timing is not network latency.</p></figure>
 <p>Media Redundancy Protocol is a ring-based recovery protocol defined in IEC 62439-2. The ring is supervised by a media redundancy manager. When a single link or switch failure is detected, the ring is rearranged so that communication can continue in the other direction.</p>
 <p>RSTP and MRP can be placed in the same broad family in this respect: both change the topology after a failure. MRP, however, offers a more specialized model for an industrial Ethernet ring and a deterministic response target for a single failure. RSTP is a more general bridging solution.</p>
 <p>That distinction is more useful than asking which one is simply “better.” Is the design a ring or a more general mesh? What recovery time is required? Do the selected switches genuinely support the same MRP profile? The answer comes from these conditions, not from the protocol name alone.</p>
-<h2>HSR: using both directions from the start</h2>
+<h2 id="section-4">HSR: using both directions from the start</h2><figure class="protocol-scene" data-protocol="HSR" data-state="healthy">
+    <div class="scene-heading"><span class="plate-id">04 / HSR</span><span class="scene-state">Initial state</span></div>
+    <svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="HSR · conceptual topology"><defs><pattern id="scene-HSR-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="scene-HSR-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#scene-HSR-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><path class="physical-path" d="M300 72L465 170L402 315L198 315L135 170Z"/><path class="route route-a" d="M300 72L465 170L402 315"/><path class="route route-b" d="M300 72L135 170L198 315L402 315" stroke="#a27838"/><g class="fault-mark"><path d="M429 224L441 255"/><path d="M428 234L443 248M443 234L428 248"/></g><path class="packet-path path-a" d="M300 72L465 170L402 315"/><path class="packet-path path-b" d="M300 72L135 170L198 315L402 315"/><use href="#scene-HSR-device" x="300" y="72"/><use href="#scene-HSR-device" x="465" y="170"/><use href="#scene-HSR-device" x="402" y="315"/><use href="#scene-HSR-device" x="198" y="315"/><use href="#scene-HSR-device" x="135" y="170"/><text x="332" y="56" class="node-label">DANH</text><text x="429" y="341" class="node-label">DANH</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg>
+    <figcaption>The frame is sent in both ring directions in advance.</figcaption><span class="delivery-state"></span>
+    <div class="scene-controls" hidden><button type="button" class="fault-toggle">Break the link</button><button type="button" class="flow-toggle" aria-pressed="false">Play the flow</button><button type="button" class="scene-auto">Follow scrolling</button></div>
+    <p class="study-note">Illustrative model · Animation timing is not network latency.</p></figure>
 <p>High-availability Seamless Redundancy is covered by IEC 62439-3. In the common ring model, an HSR node sends the same frame from both ports and in both directions around the ring. The first valid copy to reach the destination is delivered to the upper layer; the matching copy that arrives later is discarded.</p>
 <p>When a link breaks, the network does not wait to decide which path to open. The second copy is already travelling in the other direction. IEC 62439-3 describes this behavior as seamless switchover with zero recovery time.</p>
-<p>There is a small but important trap here: <strong>zero recovery time does not mean zero end-to-end latency.</strong>* The frame still passes through devices, may be queued, and must be processed by the application. The claim is that a new path does not have to be established after a single network-element failure.</p>
+<p>There is a small but important trap here: <strong>zero recovery time does not mean zero end-to-end latency.</strong> The frame still passes through devices, may be queued, and must be processed by the application. The claim is that a new path does not have to be established after a single network-element failure.</p>
 <p>An HSR ring is not made only of switches. An HSR-capable relay, RTU, or another IED may act as a transit node. Transit nodes inside the ring must, however, implement the required HSR functions. The standard also covers meshes built with multiport nodes in addition to rings of two-port nodes; this article uses the ring because it is the easiest model to visualize.</p>
-<h2>PRP: entrusting the same message to two separate networks</h2>
+<h2 id="section-5">PRP: entrusting the same message to two separate networks</h2><figure class="protocol-scene" data-protocol="PRP" data-state="healthy">
+    <div class="scene-heading"><span class="plate-id">05 / PRP</span><span class="scene-state">Initial state</span></div>
+    <svg class="protocol-topology" viewBox="0 0 600 400" role="img" aria-label="PRP · conceptual topology"><defs><pattern id="scene-PRP-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5L5 0" stroke="#393a3222" stroke-width=".6"/></pattern>
+    <g id="scene-PRP-device"><path d="M-19-23L12-29 24-20V20L-8 29-19 20Z" fill="#f4f1e9" stroke="#595d55" stroke-width="1.1"/><path d="M-19-23L-8-14 24-20M-8-14V29" fill="none" stroke="#595d55" stroke-width=".8"/><path d="M-16-17V14M-12-13V18" stroke="#85877d" stroke-width=".7"/><path d="M-4-9L17-13V17L-4 22Z" fill="url(#scene-PRP-hatch)" stroke="#74776d" stroke-width=".6"/><path d="M1-5L12-7V0L1 2ZM1 6L12 4V11L1 13Z" fill="#777b70"/><path d="M2-4L11-5M2 7L11 6" stroke="#ece9df" stroke-width=".6"/></g></defs><g class="construction"><circle cx="300" cy="195" r="153"/><circle cx="300" cy="195" r="174"/><path d="M74 195H530M300 16V380M80 24H104M80 24V48M520 24H496M520 24V48"/></g><g class="physical-path"><path d="M300 62L148 160L300 318"/><path d="M300 62L452 160L480 230L300 318"/></g><g class="network-domain"><ellipse cx="148" cy="166" rx="98" ry="74"/><ellipse cx="452" cy="166" rx="98" ry="74"/></g>
+        <text x="148" y="275" class="domain-label">LAN A</text><text x="452" y="275" class="domain-label">LAN B</text>
+        <path class="route route-a" d="M300 62L148 160L300 318"/><path class="route route-b" d="M300 62L452 160L480 230L300 318" stroke="#a27838"/>
+        <g class="fault-mark"><path d="M202 233L234 273"/><path d="M213 238L226 253M226 238L213 253"/></g>
+        <path class="packet-path path-a" d="M300 62L148 160L300 318"/><path class="packet-path path-b" d="M300 62L452 160L480 230L300 318"/>
+        <use href="#scene-PRP-device" x="300" y="62"/><use href="#scene-PRP-device" x="148" y="160"/><use href="#scene-PRP-device" x="452" y="160"/><use href="#scene-PRP-device" x="300" y="318"/>
+        <text x="328" y="53" class="node-label">DANP</text><text x="328" y="338" class="node-label">DANP</text><circle class="packet packet-a" r="5"/><circle class="packet packet-b" r="5" fill="#a27838"/></svg>
+    <figcaption>The frame is sent over two separate LANs in advance.</figcaption><span class="delivery-state"></span>
+    <div class="scene-controls" hidden><button type="button" class="fault-toggle">Break the link</button><button type="button" class="flow-toggle" aria-pressed="false">Play the flow</button><button type="button" class="scene-auto">Follow scrolling</button></div>
+    <p class="study-note">Illustrative model · Animation timing is not network latency.</p></figure>
 <p>Parallel Redundancy Protocol is also covered by IEC 62439-3. A PRP node sends the same information simultaneously over two separate Ethernet networks, referred to as LAN A and LAN B. The receiver uses the first valid copy and discards the other as duplicate traffic.</p>
 <p>HSR and PRP share the same central idea: the second copy is sent before a failure. The environments followed by those copies are different. With HSR, the copies travel in opposite directions through the same ring structure. With PRP, they travel through two separate LANs.</p>
 <p>PRP is therefore not only a protocol choice; it is also an infrastructure decision. Two networks may mean more switches, cables, ports, power supplies, and maintenance discipline. In return, they make it possible to separate the failure domains of the two paths more strongly. Whether that advantage is realized depends on how the LANs are actually separated with respect to shared components and common-cause failures.</p>
-<h2>Putting all four side by side</h2>
+<h2 id="section-6">Putting all four side by side</h2>
 <div class=table-wrap><table><thead><tr><th>Mechanism</th><th>Typical topology</th><th>Behavior during a failure</th><th>Simplest mental model</th></tr></thead><tbody>
 <tr><td>RSTP</td><td>Bridged ring or mesh</td><td>Changes port roles and reconverges the active topology</td><td>Opens a waiting path after the failure</td></tr>
 <tr><td>MRP</td><td>Managed industrial Ethernet ring</td><td>Detects the failure and rearranges the ring for the alternative path</td><td>Recovers the ring after the failure</td></tr>
@@ -463,28 +79,35 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 <tr><td>PRP</td><td>Two separate Ethernet LANs</td><td>Sends the frame over both LANs in advance and discards the duplicate</td><td>Gives the same message to two separate networks</td></tr>
 </tbody></table></div>
 <p>This table is not a product guarantee. The supported standard revision, firmware, port roles, capacity, and interoperability must be verified against vendor documentation.</p>
-<h2>Why does this matter in a substation?</h2>
+<h2 id="section-7">Why does this matter in a substation?</h2><figure class="substation-plate"><img src="/reader-art/substation-study.png" alt="Engineering study of a substation, protection relay and connection adapter" loading="lazy"><figcaption><span class="plate-id">06 / Physical context</span><span>Substation and protection relay · Art plate</span></figcaption></figure>
 <p>Now let us apply this general distinction to a substation.</p>
 <p>A protection relay evaluates quantities such as current and voltage and may decide to open a circuit breaker when defined conditions occur. We should not assume that this chain always depends on Ethernet. Measurement and trip circuits may be fully hardwired. In another design, measurements may be transported as Sampled Values, while status or trip information may be carried through GOOSE.</p>
 <p>A simple mental model in the IEC 61850 context is:</p>
 <ul>
-<li><strong>GOOSE</strong>* can carry event and state information such as trips, interlocks, or state changes.</li>
-<li><strong>Sampled Values</strong>* defines the mapping used to transport sampled process values such as current and voltage over Ethernet.</li>
-<li><strong>MMS-based communication</strong>* can carry functions such as supervision, reporting, and control, each with different timing expectations.</li>
+<li><strong>GOOSE</strong> can carry event and state information such as trips, interlocks, or state changes.</li>
+<li><strong>Sampled Values</strong> defines the mapping used to transport sampled process values such as current and voltage over Ethernet.</li>
+<li><strong>MMS-based communication</strong> can carry functions such as supervision, reporting, and control, each with different timing expectations.</li>
 </ul>
 <p>This does not mean that every Ethernet packet in a substation must be transported without interruption. We first need to understand which physical or operational function a message supports. A brief interruption to engineering access and an interruption to communication used in a protection decision do not carry the same risk.</p>
-<p>The central design question is: <strong>Can this function wait for the network to recover?</strong>* If the answer is yes, a recovery-based mechanism such as RSTP or MRP may be sufficient. If the answer is no, an approach such as HSR or PRP, which sends the second copy in advance, can be evaluated.</p>
-<h2>Where do SAN, DAN, and RedBox come from?</h2>
+<p>The central design question is: <strong>Can this function wait for the network to recover?</strong> If the answer is yes, a recovery-based mechanism such as RSTP or MRP may be sufficient. If the answer is no, an approach such as HSR or PRP, which sends the second copy in advance, can be evaluated.</p>
+<h2 id="section-8">Where do SAN, DAN, and RedBox come from?</h2><figure class="redbox-study"><figcaption><span class="plate-id">07 / RedBox</span><span>Redundancy adaptation</span></figcaption><svg viewBox="0 0 780 280" role="img" aria-label="SAN RedBox">
+    <defs><pattern id="redbox-hatch" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 6L6 0" stroke="#595d5544" stroke-width=".7"/></pattern></defs>
+    <path class="construction" d="M35 140H745M130 45V215M385 45V215M650 45V215"/>
+    <path d="M180 125H330M430 110L580 75M430 160L580 200" class="route"/>
+    <rect x="65" y="85" width="115" height="105" fill="url(#redbox-hatch)" stroke="#595d55"/><rect x="330" y="70" width="100" height="140" fill="#f4f1e9" stroke="#595d55"/>
+    <path d="M340 80H419V196H340ZM350 90H408V130H350Z" fill="none" stroke="#85877d"/><circle cx="585" cy="75" r="8" fill="#8c3e2f"/><circle cx="585" cy="200" r="8" fill="#a27838"/>
+    <text x="120" y="147" text-anchor="middle">SAN</text><text x="381" y="168" text-anchor="middle">RedBox</text><text x="627" y="83">HSR / PRP</text>
+    <text x="120" y="247" text-anchor="middle" class="node-label">Single-attached device</text><text x="381" y="247" text-anchor="middle" class="node-label">Redundancy adaptation</text><text x="645" y="247" text-anchor="middle" class="node-label">Redundant domain</text></svg><div class="redbox-key"><span>SAN · Single-attached device</span><span>RedBox · Redundancy adaptation</span><span>HSR / PRP · Redundant domain</span></div><p class="study-note">Conceptual interface; an HSR ring and two PRP LANs are distinct models.</p></figure>
 <p>Several more abbreviations appear when discussing HSR and PRP:</p>
 <ul>
-<li><strong>DANH</strong>* is a doubly attached node that implements HSR.</li>
-<li><strong>DANP</strong>* is a doubly attached node connected to both PRP LANs.</li>
-<li><strong>SAN</strong>* is a singly attached node that does not natively implement the redundancy protocol.</li>
-<li><strong>RedBox</strong>* performs the necessary redundancy adaptation between a SAN and an HSR or PRP domain.</li>
-<li><strong>VDAN</strong>* describes a SAN behind a RedBox being represented to the redundant network as a virtual doubly attached node.</li>
+<li><strong>DANH</strong> is a doubly attached node that implements HSR.</li>
+<li><strong>DANP</strong> is a doubly attached node connected to both PRP LANs.</li>
+<li><strong>SAN</strong> is a singly attached node that does not natively implement the redundancy protocol.</li>
+<li><strong>RedBox</strong> performs the necessary redundancy adaptation between a SAN and an HSR or PRP domain.</li>
+<li><strong>VDAN</strong> describes a SAN behind a RedBox being represented to the redundant network as a virtual doubly attached node.</li>
 </ul>
 <p>A SAN may connect without redundancy to only one of the PRP networks. A RedBox is required if the same device is to participate redundantly in both PRP LANs. In an HSR ring, a SAN without HSR capability cannot act directly as a transit node in the ring.</p>
-<h2>“Seamless” does not mean forgetting the failure</h2>
+<h2 id="section-9">“Seamless” does not mean forgetting the failure</h2><figure class="redundancy-health"><figcaption><span class="plate-id">08 / Redundancy health</span></figcaption><div class="health-comparison"><div><span class="health-dot"></span><span>Application continues</span></div><div><span class="health-dot lost"></span><span>One path is lost</span></div></div><p>Monitor availability and redundancy health separately.</p></figure>
 <p>HSR and PRP can hide a single-path failure from the application. That benefit has an operational consequence: if the loss of the first path goes unnoticed because the application continues to work, the system may now be operating without redundancy.</p>
 <p>Application availability and redundancy health should therefore be monitored separately. The following questions are useful during design and acceptance testing:</p>
 <ol>
@@ -496,17 +119,17 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 <li>Does the monitoring sensor actually see both PRP LANs or the necessary segments of the HSR ring?</li>
 </ol>
 <p>Packet capture requires care as well. Seeing two copies of the same frame is not automatically evidence of a loop or an attack. Conversely, a sensor that sees only one LAN cannot determine the health of the second path. The capture position and duplicate-discard behavior should be recorded with the analysis result.</p>
-<h2>Redundancy does not provide cybersecurity</h2>
+<h2 id="section-10">Redundancy does not provide cybersecurity</h2>
 <p>RSTP and MRP manage topology; HSR and PRP duplicate frames. By themselves, these mechanisms do not authenticate the sender, provide message integrity, or encrypt content.</p>
 <p>The security of IEC 61850-based communication must be handled separately. IEC 62351-6 defines messages, procedures, and algorithms for securing protocols derived from IEC 61850. The security profile and operating mode actually supported by the selected product must also be verified.</p>
-<h2>Conclusion</h2>
+<h2 id="section-11">Conclusion</h2>
 <p>The subject is simpler than memorizing four abbreviations:</p>
 <blockquote>RSTP and MRP recover the network after a failure. HSR and PRP send the backup copy before the failure.</blockquote>
 <p>Substation communication is a strong example that makes this distinction visible, but the decision method is more general. First, identify the function of the information being carried and its acceptable interruption. Then select the redundancy approach by considering topology, device support, failure domains, monitoring, and cost.</p>
-<h2>Evidence boundary</h2>
-<p>The basic definitions of RSTP, MRP, HSR, PRP, and the IEC 61850 mappings were <strong>verified</strong>* against official IEEE/IEC publication records and a vendor implementation manual. The operational guidance about capture position and the effect of duplicate discard on visibility is <strong>inferred</strong>* from those definitions.</p>
-<p>Recovery time and protection impact were not measured on a particular site, product, or firmware; these remain <strong>open</strong>* validation areas. This article is therefore neither a product conformity statement nor a ready-made design prescription.</p>
-<h2>Sources</h2>
+<h2 id="section-12">Evidence boundary</h2>
+<p>The basic definitions of RSTP, MRP, HSR, PRP, and the IEC 61850 mappings were <strong>verified</strong> against official IEEE/IEC publication records and a vendor implementation manual. The operational guidance about capture position and the effect of duplicate discard on visibility is <strong>inferred</strong> from those definitions.</p>
+<p>Recovery time and protection impact were not measured on a particular site, product, or firmware; these remain <strong>open</strong> validation areas. This article is therefore neither a product conformity statement nor a ready-made design prescription.</p>
+<h2 id="section-13">Sources</h2>
 <ul>
 <li><a href="https://standards.ieee.org/ieee/802.1Q/10323/" target="_blank" rel="noopener noreferrer">IEEE 802.1Q-2022 — Bridges and Bridged Networks</a></li>
 <li><a href="https://www.ieee802.org/1/pages/802.1w.html" target="_blank" rel="noopener noreferrer">IEEE 802.1 Working Group — Rapid Reconfiguration of Spanning Tree</a></li>
@@ -517,4 +140,4 @@ footer { padding: 24px 0 45px; border-top: 1px solid var(--ink); color: var(--mu
 <li><a href="https://webstore.iec.ch/en/publication/6023" target="_blank" rel="noopener noreferrer">IEC 61850-9-2:2011 — Sampled values over ISO/IEC 8802-3</a></li>
 <li><a href="https://webstore.iec.ch/en/publication/63742" target="_blank" rel="noopener noreferrer">IEC 62351-6:2020 — Security for IEC 61850</a></li>
 <li><a href="https://support.industry.siemens.com/cs/attachments/109805301/7SR5_Communication_Protocol_Manual_V2.50.pdf" target="_blank" rel="noopener noreferrer">Siemens — Reyrolle 7SR5 Communication Protocol Manual, Edition 08/2024</a></li>
-</ul></article></main><footer><div class=footer-row><p>© 2026 Selman Bağırıcı</p><nav class=social-links aria-label='Social links'><a href='https://www.linkedin.com/in/selmanbag' target=_blank rel='me noopener noreferrer'>LinkedIn</a><a href='https://www.instagram.com/mykindx/' target=_blank rel='me noopener noreferrer'>Instagram · @mykindx</a></nav></div></footer></body></html>
+</ul></article></div></main><footer><a href="/en/notes/">← All my notes</a><a href="#top">Back to top ↑</a></footer><script src="/reader.js?v=20261008-notebook-03-02-02"></script><script src="/protocol-scenes.js?v=20261008-notebook-03-02"></script></body></html>
